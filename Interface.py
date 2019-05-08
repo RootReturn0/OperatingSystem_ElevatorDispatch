@@ -1,11 +1,17 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'window.ui'
+# @Project   : Elevator Dispatch
+# 
+# @Purpose   : Assignment of Operaint System
 #
-# Created by: PyQt5 UI code generator 5.12.1
+# @Time      : 05/08/2019
 #
-# WARNING! All changes made in this file will be lost!
+# @Author    : Feifan Wang
+#
+# @Student ID: 1751694
+#
+# @Filename  : Interface.py
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -17,7 +23,6 @@ class mySlider (QtWidgets.QSlider):
     def mousePressEvent(self, e):  # disable mouse event
         if e.buttons ():
             return
-
     
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -206,7 +211,7 @@ class Ui_MainWindow(object):
         self.pushButton_13d.setGeometry(QtCore.QRect(80, 214, 41, 24))
         self.pushButton_13d.setObjectName("pushButton_13d")
         self.widget_elevator1 = QtWidgets.QWidget(self.centralwidget)
-        self.widget_elevator1.setGeometry(QtCore.QRect(130, -10, 120, 571))
+        self.widget_elevator1.setGeometry(QtCore.QRect(130, -10, 140, 640))
         self.widget_elevator1.setObjectName("widget_elevator1")
         self.elevator1_5 = QtWidgets.QPushButton(self.widget_elevator1)
         self.elevator1_5.setGeometry(QtCore.QRect(10, 430, 51, 24))
@@ -268,12 +273,17 @@ class Ui_MainWindow(object):
         self.elevator1_20 = QtWidgets.QPushButton(self.widget_elevator1)
         self.elevator1_20.setGeometry(QtCore.QRect(10, 37, 51, 25))
         self.elevator1_20.setObjectName("elevator1_20")
+        self.status_e1 = QtWidgets.QLabel(self.widget_elevator1)
+        self.status_e1.setAlignment(QtCore.Qt.AlignCenter)
+        self.status_e1.setGeometry(QtCore.QRect(73, 564, 60, 22))
+        self.status_e1.setStyleSheet("color: rgb(223,129,113);")
+        self.status_e1.setObjectName("status_e1")
         self.elevator1Slider = mySlider(self.widget_elevator1)
         self.elevator1Slider.setGeometry(QtCore.QRect(90, 40, 22, 520))
         self.elevator1Slider.setOrientation(QtCore.Qt.Vertical)
         self.elevator1Slider.setObjectName("elevator1Slider")
         self.widget_elevator2 = QtWidgets.QWidget(self.centralwidget)
-        self.widget_elevator2.setGeometry(QtCore.QRect(260, -10, 120, 571))
+        self.widget_elevator2.setGeometry(QtCore.QRect(260, -10, 140, 640))
         self.widget_elevator2.setObjectName("widget_elevator2")
         self.elevator2_5 = QtWidgets.QPushButton(self.widget_elevator2)
         self.elevator2_5.setGeometry(QtCore.QRect(10, 430, 51, 24))
@@ -335,12 +345,17 @@ class Ui_MainWindow(object):
         self.elevator2_20 = QtWidgets.QPushButton(self.widget_elevator2)
         self.elevator2_20.setGeometry(QtCore.QRect(10, 37, 51, 25))
         self.elevator2_20.setObjectName("elevator2_20")
+        self.status_e2 = QtWidgets.QLabel(self.widget_elevator2)
+        self.status_e2.setAlignment(QtCore.Qt.AlignCenter)
+        self.status_e2.setGeometry(QtCore.QRect(73, 564, 60, 22))
+        self.status_e2.setStyleSheet("color: rgb(223,129,113);")
+        self.status_e2.setObjectName("status_e2")
         self.elevator2Slider = mySlider(self.widget_elevator2)
         self.elevator2Slider.setGeometry(QtCore.QRect(90, 40, 22, 520))
         self.elevator2Slider.setOrientation(QtCore.Qt.Vertical)
         self.elevator2Slider.setObjectName("elevator2Slider")
         self.widget_elevator3 = QtWidgets.QWidget(self.centralwidget)
-        self.widget_elevator3.setGeometry(QtCore.QRect(390, -10, 120, 571))
+        self.widget_elevator3.setGeometry(QtCore.QRect(390, -10, 140, 640))
         self.widget_elevator3.setObjectName("widget_elevator3")
         self.elevator3_5 = QtWidgets.QPushButton(self.widget_elevator3)
         self.elevator3_5.setGeometry(QtCore.QRect(10, 430, 51, 24))
@@ -402,12 +417,17 @@ class Ui_MainWindow(object):
         self.elevator3_20 = QtWidgets.QPushButton(self.widget_elevator3)
         self.elevator3_20.setGeometry(QtCore.QRect(10, 37, 51, 25))
         self.elevator3_20.setObjectName("elevator3_20")
+        self.status_e3 = QtWidgets.QLabel(self.widget_elevator3)
+        self.status_e3.setAlignment(QtCore.Qt.AlignCenter)
+        self.status_e3.setGeometry(QtCore.QRect(73, 564, 60, 22))
+        self.status_e3.setStyleSheet("color: rgb(223,129,113);")
+        self.status_e3.setObjectName("status_e3")
         self.elevator3Slider = mySlider(self.widget_elevator3)
         self.elevator3Slider.setGeometry(QtCore.QRect(90, 40, 22, 520))
         self.elevator3Slider.setOrientation(QtCore.Qt.Vertical)
         self.elevator3Slider.setObjectName("elevator3Slider")
         self.widget_elevator4 = QtWidgets.QWidget(self.centralwidget)
-        self.widget_elevator4.setGeometry(QtCore.QRect(520, -10, 120, 571))
+        self.widget_elevator4.setGeometry(QtCore.QRect(520, -10, 140, 640))
         self.widget_elevator4.setObjectName("widget_elevator4")
         self.elevator4_5 = QtWidgets.QPushButton(self.widget_elevator4)
         self.elevator4_5.setGeometry(QtCore.QRect(10, 430, 51, 24))
@@ -469,12 +489,17 @@ class Ui_MainWindow(object):
         self.elevator4_20 = QtWidgets.QPushButton(self.widget_elevator4)
         self.elevator4_20.setGeometry(QtCore.QRect(10, 37, 51, 25))
         self.elevator4_20.setObjectName("elevator4_20")
+        self.status_e4 = QtWidgets.QLabel(self.widget_elevator4)
+        self.status_e4.setAlignment(QtCore.Qt.AlignCenter)
+        self.status_e4.setGeometry(QtCore.QRect(73, 564, 60, 22))
+        self.status_e4.setStyleSheet("color: rgb(223,129,113);")
+        self.status_e4.setObjectName("status_e1")
         self.elevator4Slider = mySlider(self.widget_elevator4)
         self.elevator4Slider.setGeometry(QtCore.QRect(90, 40, 22, 520))
         self.elevator4Slider.setOrientation(QtCore.Qt.Vertical)
         self.elevator4Slider.setObjectName("elevator4Slider")
         self.widget_elevator5 = QtWidgets.QWidget(self.centralwidget)
-        self.widget_elevator5.setGeometry(QtCore.QRect(650, -10, 120, 571))
+        self.widget_elevator5.setGeometry(QtCore.QRect(650, -10, 140, 640))
         self.widget_elevator5.setObjectName("widget_elevator5")
         self.elevator5_5 = QtWidgets.QPushButton(self.widget_elevator5)
         self.elevator5_5.setGeometry(QtCore.QRect(10, 430, 51, 24))
@@ -536,6 +561,11 @@ class Ui_MainWindow(object):
         self.elevator5_20 = QtWidgets.QPushButton(self.widget_elevator5)
         self.elevator5_20.setGeometry(QtCore.QRect(10, 37, 51, 25))
         self.elevator5_20.setObjectName("elevator5_20")
+        self.status_e5 = QtWidgets.QLabel(self.widget_elevator5)
+        self.status_e5.setAlignment(QtCore.Qt.AlignCenter)
+        self.status_e5.setGeometry(QtCore.QRect(73, 564, 60, 22))
+        self.status_e5.setStyleSheet("color: rgb(223,129,113);")
+        self.status_e5.setObjectName("status_e1")
         self.elevator5Slider = mySlider(self.widget_elevator5)
         self.elevator5Slider.setGeometry(QtCore.QRect(90, 40, 22, 520))
         self.elevator5Slider.setOrientation(QtCore.Qt.Vertical)
@@ -713,3 +743,8 @@ class Ui_MainWindow(object):
         self.elevator5_11.setText(_translate("MainWindow", "11"))
         self.elevator5_18.setText(_translate("MainWindow", "18"))
         self.elevator5_20.setText(_translate("MainWindow", "20"))
+        self.status_e1.setText(_translate("MainWindow","closed"))
+        self.status_e2.setText(_translate("MainWindow","closed"))
+        self.status_e3.setText(_translate("MainWindow","closed"))
+        self.status_e4.setText(_translate("MainWindow","closed"))
+        self.status_e5.setText(_translate("MainWindow","closed"))
