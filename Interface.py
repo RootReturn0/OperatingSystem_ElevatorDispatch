@@ -9,12 +9,12 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-class mySlider (QtWidgets.QSlider):  # 自定义的QSlider类
- 
+class mySlider (QtWidgets.QSlider):  
+    ''' custermize class QSlider '''
     def __init__(self, parent=None):
         super (mySlider, self).__init__ (parent)
  
-    def mousePressEvent(self, e):  ##禁用鼠标点击事件
+    def mousePressEvent(self, e):  # disable mouse event
         if e.buttons ():
             return
 
