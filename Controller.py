@@ -11,7 +11,7 @@
 #
 # @Student ID: 1751694
 #
-# @Filename  : Dispatch.py
+# @Filename  : Controller.py
 
 import sys, time
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -294,6 +294,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
                 Elevator_5.goList.append(num)
 
     def insidePush(self,index,num):
+        # When the buttons inside the elevators are pushed
+        # append the request into Elevator_index.goList
         if index==1:
             Elevator_1.goList.append(num)
         elif index==2:
@@ -306,8 +308,88 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             Elevator_5.goList.append(num)
 
     def move(self):
-        if Elevator_1.statusUp:
-            self.ui.elevator1Slider.setValue(self.ui.elevator1Slider.value()+21)
+        # 1. Move elevators
+        # 2. Change status of elevators
+        if Elevator_1.currentFloor in Elevator_1.goList:
+            self.ui.status_e1.setStyleSheet("color: rgb(99,192,135);")
+            self.ui.status_e1.setText("open")
+            Elevator_1.goList.remove(Elevator_1.currentFloor)
+        elif Elevator_1.statusUp:
+            self.ui.status_e1.setStyleSheet("color: rgb(216,189,144);")
+            self.ui.status_e1.setText("running")
+            for i in range(21):
+                time.sleep(0.05)
+                self.ui.elevator1Slider.setValue(self.ui.elevator1Slider.value()+1)
+        elif Elevator_1.statusDown:
+            self.ui.status_e1.setStyleSheet("color: rgb(216,189,144);")
+            self.ui.status_e1.setText("running")
+            for i in range(21):
+                time.sleep(0.05)
+                self.ui.elevator1Slider.setValue(self.ui.elevator1Slider.value()-1)
+        if Elevator_2.currentFloor in Elevator_2.goList:
+            self.ui.status_e2.setStyleSheet("color: rgb(99,192,135);")
+            self.ui.status_e2.setText("open")
+            Elevator_2.goList.remove(Elevator_2.currentFloor)
+        elif Elevator_2.statusUp:
+            self.ui.status_e2.setStyleSheet("color: rgb(216,189,144);")
+            self.ui.status_e2.setText("running")
+            for i in range(21):
+                time.sleep(0.05)
+                self.ui.elevator2Slider.setValue(self.ui.elevator2Slider.value()+1)
+        elif Elevator_2.statusDown:
+            self.ui.status_e2.setStyleSheet("color: rgb(216,189,144);")
+            self.ui.status_e2.setText("running")
+            for i in range(21):
+                time.sleep(0.05)
+                self.ui.elevator2Slider.setValue(self.ui.elevator2Slider.value()-1)
+        if Elevator_3.currentFloor in Elevator_3.goList:
+            self.ui.status_e3.setStyleSheet("color: rgb(99,192,135);")
+            self.ui.status_e3.setText("open")
+            Elevator_3.goList.remove(Elevator_3.currentFloor)
+        elif Elevator_3.statusUp:
+            self.ui.status_e3.setStyleSheet("color: rgb(216,189,144);")
+            self.ui.status_e3.setText("running")
+            for i in range(21):
+                time.sleep(0.05)
+                self.ui.elevator3Slider.setValue(self.ui.elevator3Slider.value()+1)
+        elif Elevator_3.statusDown:
+            self.ui.status_e3.setStyleSheet("color: rgb(216,189,144);")
+            self.ui.status_e3.setText("running")
+            for i in range(21):
+                time.sleep(0.05)
+                self.ui.elevator3Slider.setValue(self.ui.elevator3Slider.value()-1)
+        if Elevator_4.currentFloor in Elevator_4.goList:
+            self.ui.status_e4.setStyleSheet("color: rgb(99,192,135);")
+            self.ui.status_e4.setText("open")
+            Elevator_4.goList.remove(Elevator_4.currentFloor)
+        elif Elevator_4.statusUp:
+            self.ui.status_e4.setStyleSheet("color: rgb(216,189,144);")
+            self.ui.status_e4.setText("running")
+            for i in range(21):
+                time.sleep(0.05)
+                self.ui.elevator4Slider.setValue(self.ui.elevator4Slider.value()+1)
+        elif Elevator_4.statusDown:
+            self.ui.status_e4.setStyleSheet("color: rgb(216,189,144);")
+            self.ui.status_e4.setText("running")
+            for i in range(21):
+                time.sleep(0.05)
+                self.ui.elevator4Slider.setValue(self.ui.elevator4Slider.value()-1)
+        if Elevator_5.currentFloor in Elevator_5.goList:
+            self.ui.status_e5.setStyleSheet("color: rgb(99,192,135);")
+            self.ui.status_e5.setText("open")
+            Elevator_5.goList.remove(Elevator_5.currentFloor)
+        elif Elevator_5.statusUp:
+            self.ui.status_e5.setStyleSheet("color: rgb(216,189,144);")
+            self.ui.status_e5.setText("running")
+            for i in range(21):
+                time.sleep(0.05)
+                self.ui.elevator5Slider.setValue(self.ui.elevator5Slider.value()+1)
+        elif Elevator_5.statusDown:
+            self.ui.status_e5.setStyleSheet("color: rgb(216,189,144);")
+            self.ui.status_e5.setText("running")
+            for i in range(21):
+                time.sleep(0.05)
+                self.ui.elevator5Slider.setValue(self.ui.elevator5Slider.value()-1)
         
 
 class WorkThread(QThread):
