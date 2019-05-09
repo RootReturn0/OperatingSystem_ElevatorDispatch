@@ -88,7 +88,7 @@ class Elevator:
     def ifArrive(self):
         # check if Elevator arrives the target floor
         return (self.currentFloor in self.upList and self.statusUp) \
-                or (self.currentFloor in self.downList and self.downList)
+            or (self.currentFloor in self.downList and self.downList)
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -270,8 +270,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.timer_2.timeout.connect(lambda: self.change.start())
         self.timer_2.start(0.001)
 
+
 class MoveThread1(QThread):
     ''' activate the thread for Elevator_1 '''
+
     def __int__(self):
         super(MoveThread1, self).__init__()
 
@@ -282,6 +284,7 @@ class MoveThread1(QThread):
 
 class MoveThread2(QThread):
     ''' activate the thread for Elevator_2 '''
+
     def __int__(self):
         super(MoveThread2, self).__init__()
 
@@ -292,6 +295,7 @@ class MoveThread2(QThread):
 
 class MoveThread3(QThread):
     ''' activate the thread for Elevator_3 '''
+
     def __int__(self):
         super(MoveThread3, self).__init__()
 
@@ -302,6 +306,7 @@ class MoveThread3(QThread):
 
 class MoveThread4(QThread):
     ''' activate the thread for Elevator_4 '''
+
     def __int__(self):
         super(MoveThread4, self).__init__()
 
@@ -312,6 +317,7 @@ class MoveThread4(QThread):
 
 class MoveThread5(QThread):
     ''' activate the thread for Elevator_5 '''
+
     def __int__(self):
         super(MoveThread5, self).__init__()
 
@@ -333,6 +339,7 @@ class WorkThread(QThread):
 
 class DownWaitListThread(QThread):
     ''' assign tasks to elevators in downWaiting[] '''
+
     def __int__(self):
         super(DownWaitListThread, self).__init__()
 
@@ -343,6 +350,7 @@ class DownWaitListThread(QThread):
 
 class UpWaitListThread(QThread):
     ''' assign tasks to elevators in upWaiting[] '''
+
     def __int__(self):
         super(UpWaitListThread, self).__init__()
 
@@ -353,11 +361,13 @@ class UpWaitListThread(QThread):
 
 class ChangeThread(QThread):
     ''' the thread of changeFloor() '''
+
     def __int__(self):
         super(ChangeThread, self).__init__()
 
     def run(self):
         changeFloor()
+
 
 def changeFloor():
     # change the display of the floor number of each elevator
@@ -366,6 +376,7 @@ def changeFloor():
     w.ui.floor_e3.setText(str(Elevator_3.currentFloor))
     w.ui.floor_e4.setText(str(Elevator_4.currentFloor))
     w.ui.floor_e5.setText(str(Elevator_5.currentFloor))
+
 
 def move1():
     # Move Elevator_1 in MainWindow
@@ -581,20 +592,20 @@ def up(num):
     # If there are no elevators available currently, append the request into upWaiting list
 
     # at least 1 elevator is working for the task
-    if((len(Elevator_1.downList)==0 and Elevator_1.currentFloor == num and Elevator_1.open)
-            or (len(Elevator_2.downList)==0 and Elevator_2.currentFloor == num and Elevator_2.open)
-            or (len(Elevator_3.downList)==0 and Elevator_3.currentFloor == num and Elevator_3.open)
-            or (len(Elevator_4.downList)==0 and Elevator_4.currentFloor == num and Elevator_4.open)
-            or (len(Elevator_5.downList)==0 and Elevator_5.currentFloor == num and Elevator_5.open)):
+    if((len(Elevator_1.downList) == 0 and Elevator_1.currentFloor == num and Elevator_1.open)
+            or (len(Elevator_2.downList) == 0 and Elevator_2.currentFloor == num and Elevator_2.open)
+            or (len(Elevator_3.downList) == 0 and Elevator_3.currentFloor == num and Elevator_3.open)
+            or (len(Elevator_4.downList) == 0 and Elevator_4.currentFloor == num and Elevator_4.open)
+            or (len(Elevator_5.downList) == 0 and Elevator_5.currentFloor == num and Elevator_5.open)):
         return
 
     elevatorDValue = []  # the distance between each elevator and the target floor
 
     # make distance larger to lower the priority
     if Elevator_1.statusFree == True:
-        elevatorDValue.append(abs(Elevator_1.currentFloor-num)+1)  
+        elevatorDValue.append(abs(Elevator_1.currentFloor-num)+1)
     # the elevator must have no tasks downstairs and the number of its current floor < int(num)
-    elif len(Elevator_1.downList) == 0 and Elevator_1.currentFloor < num:  
+    elif len(Elevator_1.downList) == 0 and Elevator_1.currentFloor < num:
         elevatorDValue.append(abs(Elevator_1.currentFloor-num))
     else:
         elevatorDValue.append(100)
@@ -664,14 +675,14 @@ def down(num):
     # If there are no elevators available currently, append the request into downWaiting list
 
     # at least 1 elevator is working for the task
-    if((len(Elevator_1.upList)==0 and Elevator_1.currentFloor == num and Elevator_1.open)
-            or (len(Elevator_2.upList)==0 and Elevator_2.currentFloor == num and Elevator_2.open)
-            or (len(Elevator_3.upList)==0 and Elevator_3.currentFloor == num and Elevator_3.open)
-            or (len(Elevator_4.upList)==0 and Elevator_4.currentFloor == num and Elevator_4.open)
-            or (len(Elevator_5.upList)==0 and Elevator_5.currentFloor == num and Elevator_5.open)):
+    if((len(Elevator_1.upList) == 0 and Elevator_1.currentFloor == num and Elevator_1.open)
+            or (len(Elevator_2.upList) == 0 and Elevator_2.currentFloor == num and Elevator_2.open)
+            or (len(Elevator_3.upList) == 0 and Elevator_3.currentFloor == num and Elevator_3.open)
+            or (len(Elevator_4.upList) == 0 and Elevator_4.currentFloor == num and Elevator_4.open)
+            or (len(Elevator_5.upList) == 0 and Elevator_5.currentFloor == num and Elevator_5.open)):
         return
 
-    elevatorDValue = [] # the distance between each elevator and the target floor
+    elevatorDValue = []  # the distance between each elevator and the target floor
 
     # make distance larger to lower the priority
     if Elevator_1.statusFree == True:
@@ -739,14 +750,14 @@ def down(num):
 
 def insidePush(index, num):
     # When the buttons inside the elevators are pushed
-    
+
     if index == 1:
         # single click to assign the task
         if num not in Elevator_1.upList and num not in Elevator_1.downList:
             if Elevator_1.statusUp:
-            # if the target floor is upper than current floor when the elevator going up
-            # then add the task to upList[]
-            # else add the task to downList[]
+                # if the target floor is upper than current floor when the elevator going up
+                # then add the task to upList[]
+                # else add the task to downList[]
                 if Elevator_1.currentFloor < num:
                     Elevator_1.upList.append(num)
                 else:
