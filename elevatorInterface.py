@@ -29,6 +29,7 @@ class mySlider (QtWidgets.QSlider):
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
+        MainWindow.setWindowTitle("Elevator Simulator")
         MainWindow.resize(800, 612)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -42,7 +43,7 @@ class Ui_MainWindow(object):
         self.label_12.setGeometry(QtCore.QRect(17, 272, 16, 16))
         self.label_12.setObjectName("label_12")
         self.label = QtWidgets.QLabel(self.outsideWidget)
-        self.label.setGeometry(QtCore.QRect(10, 8, 26, 19))
+        self.label.setGeometry(QtCore.QRect(10, 8, 30, 19))
         self.label.setObjectName("label")
         self.label_10 = QtWidgets.QLabel(self.outsideWidget)
         self.label_10.setGeometry(QtCore.QRect(19, 324, 16, 16))
@@ -640,10 +641,10 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "Elevator Simulator"))
         self.label_6.setText(_translate("MainWindow", "1"))
         self.label_12.setText(_translate("MainWindow", "11"))
-        self.label.setText(_translate("MainWindow", "楼层"))
+        self.label.setText(_translate("MainWindow", "Floor"))
         self.label_10.setText(_translate("MainWindow", "9"))
         self.label_19.setText(_translate("MainWindow", "13"))
         self.label_8.setText(_translate("MainWindow", "3"))
@@ -810,8 +811,8 @@ class Ui_MainWindow(object):
         self.floor_e3.setText(_translate("MainWindow","1"))
         self.floor_e4.setText(_translate("MainWindow","1"))
         self.floor_e5.setText(_translate("MainWindow","1"))
-        self.ID_e1.setText(_translate("MainWindow","1号电梯"))
-        self.ID_e2.setText(_translate("MainWindow","2号电梯"))
-        self.ID_e3.setText(_translate("MainWindow","3号电梯"))
-        self.ID_e4.setText(_translate("MainWindow","4号电梯"))
-        self.ID_e5.setText(_translate("MainWindow","5号电梯"))
+        self.ID_e1.setText(_translate("MainWindow","No.1"))
+        self.ID_e2.setText(_translate("MainWindow","No.2"))
+        self.ID_e3.setText(_translate("MainWindow","No.3"))
+        self.ID_e4.setText(_translate("MainWindow","No.4"))
+        self.ID_e5.setText(_translate("MainWindow","No.5"))
