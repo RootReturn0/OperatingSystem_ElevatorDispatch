@@ -29,39 +29,55 @@ class Elevator:
         self.statusUp = False
         self.statusDown = False
         self.stay = False
+        self.open=False
         self.currentFloor = 1
-        self.goList = []
+        self.upList = []
+        self.downList = []
 
     def move(self):
         # change status of Elevator
-        if len(self.goList):
-            self.statusFree = False
-            if min(self.goList) > self.currentFloor:
-                self.statusFree = False
-                self.statusUp = True
-                self.statusDown = False
-            elif max(self.goList) < self.currentFloor:
-                self.statusFree = False
-                self.statusUp = False
-                self.statusDown = True
+        if len(self.upList) and self.statusUp:
+            return
+        if len(self.downList) and self.statusDown:
+            return
+        if len(self.downList):
+            if self.currentFloor<min(self.downList):
+                self.statusFree=False
+                self.statusUp=True
+                self.statusDown=False
+            else:
+                self.statusFree=False
+                self.statusUp=False
+                self.statusDown=True
+        elif len(self.upList):
+            if self.currentFloor>max(self.upList):
+                self.statusFree=False
+                self.statusUp=False
+                self.statusDown=True
+            else:
+                self.statusFree=False
+                self.statusUp=True
+                self.statusDown=False
         else:
             self.statusFree = True
             self.statusUp = False
             self.statusDown = False
 
     def updateFloor(self):
-        if self.ifArrive():
-            self.goList.remove(self.currentFloor)
+        if self.statusUp and self.currentFloor in self.upList:
+            self.upList.remove(self.currentFloor)
+            return
+        if self.statusDown and self.currentFloor in self.downList:
+            self.downList.remove(self.currentFloor)
             return
 
-        if len(self.goList):
-            if self.statusUp:
-                self.currentFloor += 1
-            else:
-                self.currentFloor -= 1
+        if self.statusUp:
+            self.currentFloor += 1
+        elif self.statusDown:
+            self.currentFloor -= 1
 
     def ifArrive(self):
-        return self.currentFloor in self.goList
+        return (self.currentFloor in self.upList and self.statusUp) or (self.currentFloor in self.downList and self.downList)
 
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -250,157 +266,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.ui.floor_e4.setText(str(Elevator_4.currentFloor))
         self.ui.floor_e5.setText(str(Elevator_5.currentFloor))
 
-    def move1(self):
-        # 1. Move elevators
-        # 2. Change status of elevators
-        if Elevator_1.stay == False:
-            Elevator_1.stay = True
-            if Elevator_1.ifArrive():
-                self.ui.status_e1.setStyleSheet("color: rgb(99,192,135);")
-                self.ui.status_e1.setText("open")
-                #Elevator_1.goList.remove(Elevator_1.currentFloor)
-                time.sleep(1)
-                update1()
-            elif Elevator_1.statusFree:
-                self.ui.status_e1.setStyleSheet("color: rgb(223,129,113);")
-                self.ui.status_e1.setText("closed")
-                update1()
-            elif Elevator_1.statusUp:
-                self.ui.status_e1.setStyleSheet("color: rgb(106,189,144);")
-                self.ui.status_e1.setText("running")
-                for i in range(10):
-                    time.sleep(0.05)
-                    self.ui.elevator1Slider.setValue(
-                        self.ui.elevator1Slider.value()+1)
-                update1()
-            elif Elevator_1.statusDown:
-                self.ui.status_e1.setStyleSheet("color: rgb(106,189,144);")
-                self.ui.status_e1.setText("running")
-                for i in range(10):
-                    time.sleep(0.05)
-                    self.ui.elevator1Slider.setValue(
-                        self.ui.elevator1Slider.value()-1)
-                update1()
+    
 
-    def move2(self):
-        if Elevator_2.stay == False:
-            Elevator_2.stay = True
-            if Elevator_2.ifArrive():
-                self.ui.status_e2.setStyleSheet("color: rgb(99,192,135);")
-                self.ui.status_e2.setText("open")
-                #Elevator_2.goList.remove(Elevator_2.currentFloor)
-                time.sleep(1)
-                update2()
-            elif Elevator_2.statusFree:
-                self.ui.status_e2.setStyleSheet("color: rgb(223,129,113);")
-                self.ui.status_e2.setText("closed")
-                update2()
-            elif Elevator_2.statusUp:
-                self.ui.status_e2.setStyleSheet("color: rgb(106,189,144);")
-                self.ui.status_e2.setText("running")
-                for i in range(10):
-                    time.sleep(0.05)
-                    self.ui.elevator2Slider.setValue(
-                        self.ui.elevator2Slider.value()+1)
-                update2()
-            elif Elevator_2.statusDown:
-                self.ui.status_e2.setStyleSheet("color: rgb(106,189,144);")
-                self.ui.status_e2.setText("running")
-                for i in range(10):
-                    time.sleep(0.05)
-                    self.ui.elevator2Slider.setValue(
-                        self.ui.elevator2Slider.value()-1)
-                update2()
+    
 
-    def move3(self):
-        if Elevator_3.stay == False:
-            Elevator_3.stay = True
-            if Elevator_3.ifArrive():
-                self.ui.status_e3.setStyleSheet("color: rgb(99,192,135);")
-                self.ui.status_e3.setText("open")
-                #Elevator_3.goList.remove(Elevator_3.currentFloor)
-                time.sleep(1)
-                update3()
-            elif Elevator_3.statusFree:
-                self.ui.status_e3.setStyleSheet("color: rgb(223,129,113);")
-                self.ui.status_e3.setText("closed")
-                update3()
-            elif Elevator_3.statusUp:
-                self.ui.status_e3.setStyleSheet("color: rgb(106,189,144);")
-                self.ui.status_e3.setText("running")
-                for i in range(10):
-                    time.sleep(0.05)
-                    self.ui.elevator3Slider.setValue(
-                        self.ui.elevator3Slider.value()+1)
-                update3()
-            elif Elevator_3.statusDown:
-                self.ui.status_e3.setStyleSheet("color: rgb(106,189,144);")
-                self.ui.status_e3.setText("running")
-                for i in range(10):
-                    time.sleep(0.05)
-                    self.ui.elevator3Slider.setValue(
-                        self.ui.elevator3Slider.value()-1)
-                update3()
 
-    def move4(self):
-        if Elevator_4.stay == False:
-            Elevator_4.stay = True
-            if Elevator_4.ifArrive():
-                self.ui.status_e4.setStyleSheet("color: rgb(99,192,135);")
-                self.ui.status_e4.setText("open")
-                #Elevator_4.goList.remove(Elevator_4.currentFloor)
-                time.sleep(1)
-                update4()
-            elif Elevator_4.statusFree:
-                self.ui.status_e4.setStyleSheet("color: rgb(223,129,113);")
-                self.ui.status_e4.setText("closed")
-                update4()
-            elif Elevator_4.statusUp:
-                self.ui.status_e4.setStyleSheet("color: rgb(106,189,144);")
-                self.ui.status_e4.setText("running")
-                for i in range(10):
-                    time.sleep(0.05)
-                    self.ui.elevator4Slider.setValue(
-                        self.ui.elevator4Slider.value()+1)
-                update4()
-            elif Elevator_4.statusDown:
-                self.ui.status_e4.setStyleSheet("color: rgb(106,189,144);")
-                self.ui.status_e4.setText("running")
-                for i in range(10):
-                    time.sleep(0.05)
-                    self.ui.elevator4Slider.setValue(
-                        self.ui.elevator4Slider.value()-1)
-                update4()
 
-    def move5(self):
-        if Elevator_5.stay == False:
-            Elevator_5.stay = True
-            if Elevator_5.ifArrive():
-                self.ui.status_e5.setStyleSheet("color: rgb(99,192,135);")
-                self.ui.status_e5.setText("open")
-                #Elevator_5.goList.remove(Elevator_5.currentFloor)
-                time.sleep(1)
-                update5()
-            elif Elevator_5.statusFree:
-                self.ui.status_e5.setStyleSheet("color: rgb(223,129,113);")
-                self.ui.status_e5.setText("closed")
-                update5()
-            elif Elevator_5.statusUp:
-                self.ui.status_e5.setStyleSheet("color: rgb(106,189,144);")
-                self.ui.status_e5.setText("running")
-                for i in range(10):
-                    time.sleep(0.05)
-                    self.ui.elevator5Slider.setValue(
-                        self.ui.elevator5Slider.value()+1)
-                update5()
-            elif Elevator_5.statusDown:
-                self.ui.status_e5.setStyleSheet("color: rgb(106,189,144);")
-                self.ui.status_e5.setText("running")
-                for i in range(10):
-                    time.sleep(0.05)
-                    self.ui.elevator5Slider.setValue(
-                        self.ui.elevator5Slider.value()-1)
-                update5()
+
 
 
 class MoveThread1(QThread):
@@ -410,7 +282,7 @@ class MoveThread1(QThread):
 
     def run(self):
         Elevator_1.move()
-        MainWindow.move1(w)
+        move1()
 
 
 class MoveThread2(QThread):
@@ -420,7 +292,7 @@ class MoveThread2(QThread):
 
     def run(self):
         Elevator_2.move()
-        MainWindow.move2(w)
+        move2()
 
 
 class MoveThread3(QThread):
@@ -430,7 +302,7 @@ class MoveThread3(QThread):
 
     def run(self):
         Elevator_3.move()
-        MainWindow.move3(w)
+        move3()
 
 
 class MoveThread4(QThread):
@@ -440,7 +312,7 @@ class MoveThread4(QThread):
 
     def run(self):
         Elevator_4.move()
-        MainWindow.move4(w)
+        move4()
 
 
 class MoveThread5(QThread):
@@ -450,7 +322,7 @@ class MoveThread5(QThread):
 
     def run(self):
         Elevator_5.move()
-        MainWindow.move5(w)
+        move5()
 
 
 class WorkThread(QThread):
@@ -492,32 +364,188 @@ class ChangeThread(QThread):
     def run(self):
         MainWindow.changeFloor(w)
 
+def move1():
+    # 1. Move elevators
+    # 2. Change status of elevators
+    if Elevator_1.stay == False:
+        Elevator_1.stay = True
+        if Elevator_1.ifArrive() or Elevator_1.open:
+            w.ui.status_e1.setStyleSheet("color: rgb(99,192,135);")
+            w.ui.status_e1.setText("open")
+            #Elevator_1.goList.remove(Elevator_1.currentFloor)
+            time.sleep(1)
+            update1()
+        elif Elevator_1.statusFree:
+            w.ui.status_e1.setStyleSheet("color: rgb(223,129,113);")
+            w.ui.status_e1.setText("closed")
+            update1()
+        elif Elevator_1.statusUp:
+            w.ui.status_e1.setStyleSheet("color: rgb(206,180,139);")
+            w.ui.status_e1.setText("running")
+            for i in range(10):
+                time.sleep(0.05)
+                w.ui.elevator1Slider.setValue(
+                    w.ui.elevator1Slider.value()+1)
+            update1()
+        elif Elevator_1.statusDown:
+            w.ui.status_e1.setStyleSheet("color: rgb(206,180,139);")
+            w.ui.status_e1.setText("running")
+            for i in range(10):
+                time.sleep(0.05)
+                w.ui.elevator1Slider.setValue(
+                    w.ui.elevator1Slider.value()-1)
+            update1()
+
+def move2():
+    if Elevator_2.stay == False:
+        Elevator_2.stay = True
+        if Elevator_2.ifArrive() or Elevator_2.open:
+            w.ui.status_e2.setStyleSheet("color: rgb(99,192,135);")
+            w.ui.status_e2.setText("open")
+            #Elevator_2.goList.remove(Elevator_2.currentFloor)
+            time.sleep(1)
+            update2()
+        elif Elevator_2.statusFree:
+            w.ui.status_e2.setStyleSheet("color: rgb(223,129,113);")
+            w.ui.status_e2.setText("closed")
+            update2()
+        elif Elevator_2.statusUp:
+            w.ui.status_e2.setStyleSheet("color: rgb(206,180,139);")
+            w.ui.status_e2.setText("running")
+            for i in range(10):
+                time.sleep(0.05)
+                w.ui.elevator2Slider.setValue(
+                    w.ui.elevator2Slider.value()+1)
+            update2()
+        elif Elevator_2.statusDown:
+            w.ui.status_e2.setStyleSheet("color: rgb(206,180,139);")
+            w.ui.status_e2.setText("running")
+            for i in range(10):
+                time.sleep(0.05)
+                w.ui.elevator2Slider.setValue(
+                    w.ui.elevator2Slider.value()-1)
+            update2()
+
+def move3():
+    if Elevator_3.stay == False:
+        Elevator_3.stay = True
+        if Elevator_3.ifArrive() or Elevator_3.open:
+            w.ui.status_e3.setStyleSheet("color: rgb(99,192,135);")
+            w.ui.status_e3.setText("open")
+            #Elevator_3.goList.remove(Elevator_3.currentFloor)
+            time.sleep(1)
+            update3()
+        elif Elevator_3.statusFree:
+            w.ui.status_e3.setStyleSheet("color: rgb(223,129,113);")
+            w.ui.status_e3.setText("closed")
+            update3()
+        elif Elevator_3.statusUp:
+            w.ui.status_e3.setStyleSheet("color: rgb(206,180,139);")
+            w.ui.status_e3.setText("running")
+            for i in range(10):
+                time.sleep(0.05)
+                w.ui.elevator3Slider.setValue(
+                    w.ui.elevator3Slider.value()+1)
+            update3()
+        elif Elevator_3.statusDown:
+            w.ui.status_e3.setStyleSheet("color: rgb(206,180,139);")
+            w.ui.status_e3.setText("running")
+            for i in range(10):
+                time.sleep(0.05)
+                w.ui.elevator3Slider.setValue(
+                    w.ui.elevator3Slider.value()-1)
+            update3()
+
+def move4():
+    if Elevator_4.stay == False:
+        Elevator_4.stay = True
+        if Elevator_4.ifArrive() or Elevator_4.open:
+            w.ui.status_e4.setStyleSheet("color: rgb(99,192,135);")
+            w.ui.status_e4.setText("open")
+            #Elevator_4.goList.remove(Elevator_4.currentFloor)
+            time.sleep(1)
+            update4()
+        elif Elevator_4.statusFree:
+            w.ui.status_e4.setStyleSheet("color: rgb(223,129,113);")
+            w.ui.status_e4.setText("closed")
+            update4()
+        elif Elevator_4.statusUp:
+            w.ui.status_e4.setStyleSheet("color: rgb(206,180,139);")
+            w.ui.status_e4.setText("running")
+            for i in range(10):
+                time.sleep(0.05)
+                w.ui.elevator4Slider.setValue(
+                    w.ui.elevator4Slider.value()+1)
+            update4()
+        elif Elevator_4.statusDown:
+            w.ui.status_e4.setStyleSheet("color: rgb(206,180,139);")
+            w.ui.status_e4.setText("running")
+            for i in range(10):
+                time.sleep(0.05)
+                w.ui.elevator4Slider.setValue(
+                    w.ui.elevator4Slider.value()-1)
+            update4()
+
+def move5():
+    if Elevator_5.stay == False:
+        Elevator_5.stay = True
+        if Elevator_5.ifArrive() or Elevator_5.open:
+            w.ui.status_e5.setStyleSheet("color: rgb(99,192,135);")
+            w.ui.status_e5.setText("open")
+            #Elevator_5.goList.remove(Elevator_5.currentFloor)
+            time.sleep(1)
+            update5()
+        elif Elevator_5.statusFree:
+            w.ui.status_e5.setStyleSheet("color: rgb(223,129,113);")
+            w.ui.status_e5.setText("closed")
+            update5()
+        elif Elevator_5.statusUp:
+            w.ui.status_e5.setStyleSheet("color: rgb(206,180,139);")
+            w.ui.status_e5.setText("running")
+            for i in range(10):
+                time.sleep(0.05)
+                w.ui.elevator5Slider.setValue(
+                    w.ui.elevator5Slider.value()+1)
+            update5()
+        elif Elevator_5.statusDown:
+            w.ui.status_e5.setStyleSheet("color: rgb(206,180,139);")
+            w.ui.status_e5.setText("running")
+            for i in range(10):
+                time.sleep(0.05)
+                w.ui.elevator5Slider.setValue(
+                    w.ui.elevator5Slider.value()-1)
+            update5()
 
 def update1():
     Elevator_1.stay = False
+    Elevator_1.open=False
     Elevator_1.updateFloor()
 
 
 def update2():
     Elevator_2.stay = False
+    Elevator_2.open=False
     Elevator_2.updateFloor()
     #Elevator_2.move()
 
 
 def update3():
     Elevator_3.stay = False
+    Elevator_3.open=False
     Elevator_3.updateFloor()
     #Elevator_3.move()
 
 
 def update4():
     Elevator_4.stay = False
+    Elevator_4.open=False
     Elevator_4.updateFloor()
     # Elevator_4.move()
 
 
 def update5():
     Elevator_5.stay = False
+    Elevator_5.open=False
     Elevator_5.updateFloor()
     # Elevator_5.move()
 
@@ -531,60 +559,55 @@ def up(num):
     # If there are no elevators available currently,
     # append the request into upWaiting list
     elevatorDValue = []
-    if Elevator_1.statusDown == False and Elevator_1.currentFloor <= num:
-        if Elevator_1.statusUp == False:
-            elevatorDValue.append(abs(Elevator_1.currentFloor-num)+1)
-        else:
-            elevatorDValue.append(abs(Elevator_1.currentFloor-num))
+    if Elevator_1.statusFree == True:
+        elevatorDValue.append(abs(Elevator_1.currentFloor-num)+1)
+    elif len(Elevator_1.downList)==0 and Elevator_1.currentFloor<num:
+        elevatorDValue.append(abs(Elevator_1.currentFloor-num))
     else:
-        elevatorDValue.append(20)
-    if Elevator_2.statusDown == False and Elevator_2.currentFloor <= num:
-        if Elevator_2.statusUp == False:
-            elevatorDValue.append(abs(Elevator_2.currentFloor-num)+1)
-        else:
-            elevatorDValue.append(abs(Elevator_2.currentFloor-num))
+        elevatorDValue.append(100)
+    if Elevator_2.statusFree == True:
+        elevatorDValue.append(abs(Elevator_2.currentFloor-num)+1)
+    elif len(Elevator_2.downList)==0 and Elevator_2.currentFloor<num:
+        elevatorDValue.append(abs(Elevator_2.currentFloor-num))
     else:
-        elevatorDValue.append(20)
-    if Elevator_3.statusDown == False and Elevator_3.currentFloor <= num:
-        if Elevator_3.statusUp == False:
-            elevatorDValue.append(abs(Elevator_3.currentFloor-num)+1)
-        else:
-            elevatorDValue.append(abs(Elevator_3.currentFloor-num))
+        elevatorDValue.append(100)
+    if Elevator_3.statusFree == True:
+        elevatorDValue.append(abs(Elevator_3.currentFloor-num)+1)
+    elif len(Elevator_3.downList)==0 and Elevator_3.currentFloor<num:
+        elevatorDValue.append(abs(Elevator_3.currentFloor-num))
     else:
-        elevatorDValue.append(20)
-    if Elevator_4.statusDown == False and Elevator_4.currentFloor <= num:
-        if Elevator_4.statusUp == False:
-            elevatorDValue.append(abs(Elevator_4.currentFloor-num)+1)
-        else:
-            elevatorDValue.append(abs(Elevator_4.currentFloor-num))
+        elevatorDValue.append(100)
+    if Elevator_4.statusFree == True:
+        elevatorDValue.append(abs(Elevator_4.currentFloor-num)+1)
+    elif len(Elevator_4.downList)==0 and Elevator_4.currentFloor<num:
+        elevatorDValue.append(abs(Elevator_4.currentFloor-num))
     else:
-        elevatorDValue.append(20)
-    if Elevator_5.statusDown == False and Elevator_5.currentFloor <= num:
-        if Elevator_5.statusUp == False:
-            elevatorDValue.append(abs(Elevator_5.currentFloor-num)+1)
-        else:
-            elevatorDValue.append(abs(Elevator_5.currentFloor-num))
+        elevatorDValue.append(100)
+    if Elevator_5.statusFree == True:
+        elevatorDValue.append(abs(Elevator_5.currentFloor-num)+1)
+    elif len(Elevator_5.downList)==0 and Elevator_5.currentFloor<num:
+        elevatorDValue.append(abs(Elevator_5.currentFloor-num))
     else:
-        elevatorDValue.append(20)
+        elevatorDValue.append(100)
 
-    if min(elevatorDValue) > 20:
+    if min(elevatorDValue) == 100:
         upWaiting.append(num)
     else:
         if elevatorDValue.index(min(elevatorDValue)) == 0:
-            if num not in Elevator_1.goList:
-                Elevator_1.goList.append(num)
+            if num not in Elevator_1.upList:
+                Elevator_1.upList.append(num)
         elif elevatorDValue.index(min(elevatorDValue)) == 1:
-            if num not in Elevator_2.goList:
-                Elevator_2.goList.append(num)
+            if num not in Elevator_2.upList:
+                Elevator_2.upList.append(num)
         elif elevatorDValue.index(min(elevatorDValue)) == 2:
-            if num not in Elevator_3.goList:
-                Elevator_3.goList.append(num)
+            if num not in Elevator_3.upList:
+                Elevator_3.upList.append(num)
         elif elevatorDValue.index(min(elevatorDValue)) == 3:
-            if num not in Elevator_4.goList:
-                Elevator_4.goList.append(num)
+            if num not in Elevator_4.upList:
+                Elevator_4.upList.append(num)
         elif elevatorDValue.index(min(elevatorDValue)) == 4:
-            if num not in Elevator_5.goList:
-                Elevator_5.goList.append(num)
+            if num not in Elevator_5.upList:
+                Elevator_5.upList.append(num)
 
 
 def down(num):
@@ -596,76 +619,170 @@ def down(num):
     # If there are no elevators available currently,
     # append the request into downWaiting list
     elevatorDValue = []
-    if Elevator_1.statusUp == False and Elevator_1.currentFloor >= num:
-        if Elevator_1.statusDown == False:
-            elevatorDValue.append(
-                abs(Elevator_1.currentFloor-num)+1)  # set priority
-        else:
-            elevatorDValue.append(abs(Elevator_1.currentFloor-num))
+    if Elevator_1.statusFree == True:
+        elevatorDValue.append(abs(Elevator_1.currentFloor-num)+1)
+    elif len(Elevator_1.upList)==0 and Elevator_1.currentFloor>num:
+        elevatorDValue.append(abs(Elevator_1.currentFloor-num))
     else:
-        elevatorDValue.append(20)
-    if Elevator_2.statusUp == False and Elevator_2.currentFloor >= num:
-        if Elevator_2.statusDown == False:
-            elevatorDValue.append(abs(Elevator_2.currentFloor-num)+1)
-        else:
-            elevatorDValue.append(abs(Elevator_2.currentFloor-num))
+        elevatorDValue.append(100)
+    if Elevator_2.statusFree == True:
+        elevatorDValue.append(abs(Elevator_2.currentFloor-num)+1)
+    elif len(Elevator_2.upList)==0 and Elevator_2.currentFloor>num:
+        elevatorDValue.append(abs(Elevator_2.currentFloor-num))
     else:
-        elevatorDValue.append(20)
-    if Elevator_3.statusUp == False and Elevator_3.currentFloor >= num:
-        if Elevator_3.statusDown == False:
-            elevatorDValue.append(abs(Elevator_3.currentFloor-num)+1)
-        else:
-            elevatorDValue.append(abs(Elevator_3.currentFloor-num))
+        elevatorDValue.append(100)
+    if Elevator_3.statusFree == True:
+        elevatorDValue.append(abs(Elevator_3.currentFloor-num)+1)
+    elif len(Elevator_3.upList)==0 and Elevator_3.currentFloor>num:
+        elevatorDValue.append(abs(Elevator_3.currentFloor-num))
     else:
-        elevatorDValue.append(20)
-    if Elevator_4.statusUp == False and Elevator_4.currentFloor >= num:
-        if Elevator_4.statusDown == False:
-            elevatorDValue.append(abs(Elevator_4.currentFloor-num)+1)
-        else:
-            elevatorDValue.append(abs(Elevator_4.currentFloor-num))
+        elevatorDValue.append(100)
+    if Elevator_4.statusFree == True:
+        elevatorDValue.append(abs(Elevator_4.currentFloor-num)+1)
+    elif len(Elevator_4.upList)==0 and Elevator_4.currentFloor>num:
+        elevatorDValue.append(abs(Elevator_4.currentFloor-num))
     else:
-        elevatorDValue.append(20)
-    if Elevator_5.statusUp == False and Elevator_5.currentFloor >= num:
-        if Elevator_5.statusDown == False:
-            elevatorDValue.append(abs(Elevator_5.currentFloor-num)+1)
-        else:
-            elevatorDValue.append(abs(Elevator_5.currentFloor-num))
+        elevatorDValue.append(100)
+    if Elevator_5.statusFree == True:
+        elevatorDValue.append(abs(Elevator_5.currentFloor-num)+1)
+    elif len(Elevator_5.upList)==0 and Elevator_5.currentFloor>num:
+        elevatorDValue.append(abs(Elevator_5.currentFloor-num))
     else:
-        elevatorDValue.append(20)
+        elevatorDValue.append(100)
 
-    if min(elevatorDValue) >= 20:
+    if min(elevatorDValue) == 100:
         downWaiting.append(num)
     else:
         if elevatorDValue.index(min(elevatorDValue)) == 0:
-            if num not in Elevator_1.goList:
-                Elevator_1.goList.append(num)
+            if num not in Elevator_1.downList:
+                Elevator_1.downList.append(num)
         elif elevatorDValue.index(min(elevatorDValue)) == 1:
-            if num not in Elevator_2.goList:
-                Elevator_2.goList.append(num)
+            if num not in Elevator_2.downList:
+                Elevator_2.downList.append(num)
         elif elevatorDValue.index(min(elevatorDValue)) == 2:
-            if num not in Elevator_3.goList:
-                Elevator_3.goList.append(num)
+            if num not in Elevator_3.downList:
+                Elevator_3.downList.append(num)
         elif elevatorDValue.index(min(elevatorDValue)) == 3:
-            if num not in Elevator_4.goList:
-                Elevator_4.goList.append(num)
+            if num not in Elevator_4.downList:
+                Elevator_4.downList.append(num)
         elif elevatorDValue.index(min(elevatorDValue)) == 4:
-            if num not in Elevator_5.goList:
-                Elevator_5.goList.append(num)
+            if num not in Elevator_5.downList:
+                Elevator_5.downList.append(num)
 
 
 def insidePush(index, num):
     # When the buttons inside the elevators are pushed
     # append the request into Elevator_index.goList
-    if index == 1 and num not in Elevator_1.goList:
-        Elevator_1.goList.append(num)
-    elif index == 2 and num not in Elevator_2.goList:
-        Elevator_2.goList.append(num)
-    elif index == 3 and num not in Elevator_3.goList:
-        Elevator_3.goList.append(num)
-    elif index == 4 and num not in Elevator_4.goList:
-        Elevator_4.goList.append(num)
-    elif index == 5 and num not in Elevator_5.goList:
-        Elevator_5.goList.append(num)
+    if index == 1:
+        if num not in Elevator_1.upList and num not in Elevator_1.downList:
+            if Elevator_1.statusUp:
+                if Elevator_1.currentFloor<num:
+                    Elevator_1.upList.append(num)
+                else:
+                    Elevator_1.downList.append(num)
+            elif Elevator_1.statusDown:
+                if Elevator_1.currentFloor>num:
+                    Elevator_1.downList.append(num)
+                else:
+                    Elevator_1.upList.append(num)
+            elif Elevator_1.currentFloor>num:
+                Elevator_1.downList.append(num)
+            elif Elevator_1.currentFloor<num:
+                Elevator_1.upList.append(num)
+            else:
+                Elevator_1.open=True
+        elif num in Elevator_1.upList:
+            Elevator_1.upList.remove(num)
+        else:
+            Elevator_1.downList.remove(num)
+    elif index == 2:
+        if num not in Elevator_2.upList and num not in Elevator_2.downList:
+            if Elevator_2.statusUp:
+                if Elevator_2.currentFloor<num:
+                    Elevator_2.upList.append(num)
+                else:
+                    Elevator_2.downList.append(num)
+            elif Elevator_2.statusDown:
+                if Elevator_2.currentFloor>num:
+                    Elevator_2.downList.append(num)
+                else:
+                    Elevator_2.upList.append(num)
+            elif Elevator_2.currentFloor>num:
+                Elevator_2.downList.append(num)
+            elif Elevator_2.currentFloor<num:
+                Elevator_2.upList.append(num)
+            else:
+                Elevator_2.open=True
+        elif num in Elevator_2.upList:
+            Elevator_2.upList.remove(num)
+        else:
+            Elevator_2.downList.remove(num)
+    elif index == 3:
+        if num not in Elevator_3.upList and num not in Elevator_3.downList:
+            if Elevator_3.statusUp:
+                if Elevator_3.currentFloor<num:
+                    Elevator_3.upList.append(num)
+                else:
+                    Elevator_3.downList.append(num)
+            elif Elevator_3.statusDown:
+                if Elevator_3.currentFloor>num:
+                    Elevator_3.downList.append(num)
+                else:
+                    Elevator_3.upList.append(num)
+            elif Elevator_3.currentFloor>num:
+                Elevator_3.downList.append(num)
+            elif Elevator_3.currentFloor<num:
+                Elevator_3.upList.append(num)
+            else:
+                Elevator_3.open=True
+        elif num in Elevator_3.upList:
+            Elevator_3.upList.remove(num)
+        else:
+            Elevator_3.downList.remove(num)
+    elif index == 4:
+        if num not in Elevator_4.upList and num not in Elevator_4.downList:
+            if Elevator_4.statusUp:
+                if Elevator_4.currentFloor<num:
+                    Elevator_4.upList.append(num)
+                else:
+                    Elevator_4.downList.append(num)
+            elif Elevator_4.statusDown:
+                if Elevator_4.currentFloor>num:
+                    Elevator_4.downList.append(num)
+                else:
+                    Elevator_4.upList.append(num)
+            elif Elevator_4.currentFloor>num:
+                Elevator_4.downList.append(num)
+            elif Elevator_4.currentFloor<num:
+                Elevator_4.upList.append(num)
+            else:
+                Elevator_4.open=True
+        elif num in Elevator_4.upList:
+            Elevator_4.upList.remove(num)
+        else:
+            Elevator_4.downList.remove(num)
+    elif index == 5:
+        if num not in Elevator_5.upList and num not in Elevator_5.downList:
+            if Elevator_5.statusUp:
+                if Elevator_5.currentFloor<num:
+                    Elevator_5.upList.append(num)
+                else:
+                    Elevator_5.downList.append(num)
+            elif Elevator_5.statusDown:
+                if Elevator_5.currentFloor>num:
+                    Elevator_5.downList.append(num)
+                else:
+                    Elevator_5.upList.append(num)
+            elif Elevator_5.currentFloor>num:
+                Elevator_5.downList.append(num)
+            elif Elevator_5.currentFloor<num:
+                Elevator_5.upList.append(num)
+            else:
+                Elevator_5.open=True
+        elif num in Elevator_5.upList:
+            Elevator_5.upList.remove(num)
+        else:
+            Elevator_5.downList.remove(num)
 
 
 if __name__ == "__main__":
