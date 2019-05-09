@@ -17,6 +17,7 @@
 
 import sys
 import time
+#import multiprocessing
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QTimer, QThread, pyqtSignal
 from elevatorInterface import Ui_MainWindow
@@ -246,7 +247,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.change = ChangeThread()
         self.downWaitList = DownWaitListThread()
         self.upWaitList = UpWaitListThread()
-        self.work.start()
         if Elevator_1.stay == False:
             self.work.trigger.connect(lambda: self.moveElevator1.start())
         if Elevator_2.stay == False:
@@ -263,16 +263,46 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if (Elevator_1.statusDown == False or Elevator_2.statusDown == False or Elevator_3.statusDown == False
                 or Elevator_4.statusDown == False or Elevator_5.statusDown == False):
             self.work.trigger.connect(lambda: self.upWaitList.start())
+
+        self.moveElevator1.trigger.connect(lambda:self.stop_moveElevator1())
+        self.moveElevator2.trigger.connect(lambda:self.stop_moveElevator2())
+        self.moveElevator3.trigger.connect(lambda:self.stop_moveElevator3())
+        self.moveElevator4.trigger.connect(lambda:self.stop_moveElevator4())
+        self.moveElevator5.trigger.connect(lambda:self.stop_moveElevator5())
+        self.work.trigger.connect(lambda:self.stop_work())
+        self.change.trigger.connect(lambda:self.stop_change())
+        self.downWaitList.trigger.connect(lambda:self.stop_downWaitList())
+        self.upWaitList.trigger.connect(lambda:self.stop_upWaitList())
         self.timer = QTimer()
         self.timer.timeout.connect(lambda: self.work.start())
-        self.timer.start(0.001)
+        self.timer.start(10)
         self.timer_2 = QTimer()
         self.timer_2.timeout.connect(lambda: self.change.start())
-        self.timer_2.start(0.001)
+        self.timer_2.start(10)
+
+    def stop_moveElevator1(self):
+        self.moveElevator1.quit()
+    def stop_moveElevator2(self):
+        self.moveElevator2.quit()
+    def stop_moveElevator3(self):
+        self.moveElevator3.quit()
+    def stop_moveElevator4(self):
+        self.moveElevator4.quit()
+    def stop_moveElevator5(self):
+        self.moveElevator5.quit()
+    def stop_work(self):
+        self.work.quit()
+    def stop_change(self):
+        self.change.quit()
+    def stop_downWaitList(self):
+        self.downWaitList.quit()
+    def stop_upWaitList(self):
+        self.upWaitList.quit()
 
 
 class MoveThread1(QThread):
     ''' activate the thread for Elevator_1 '''
+    trigger = pyqtSignal()
 
     def __int__(self):
         super(MoveThread1, self).__init__()
@@ -280,10 +310,12 @@ class MoveThread1(QThread):
     def run(self):
         Elevator_1.move()
         move1()
+        self.trigger.emit()
 
 
 class MoveThread2(QThread):
     ''' activate the thread for Elevator_2 '''
+    trigger = pyqtSignal()
 
     def __int__(self):
         super(MoveThread2, self).__init__()
@@ -291,10 +323,12 @@ class MoveThread2(QThread):
     def run(self):
         Elevator_2.move()
         move2()
+        self.trigger.emit()
 
 
 class MoveThread3(QThread):
     ''' activate the thread for Elevator_3 '''
+    trigger = pyqtSignal()
 
     def __int__(self):
         super(MoveThread3, self).__init__()
@@ -302,10 +336,12 @@ class MoveThread3(QThread):
     def run(self):
         Elevator_3.move()
         move3()
+        self.trigger.emit()
 
 
 class MoveThread4(QThread):
     ''' activate the thread for Elevator_4 '''
+    trigger = pyqtSignal()
 
     def __int__(self):
         super(MoveThread4, self).__init__()
@@ -313,10 +349,12 @@ class MoveThread4(QThread):
     def run(self):
         Elevator_4.move()
         move4()
+        self.trigger.emit()
 
 
 class MoveThread5(QThread):
     ''' activate the thread for Elevator_5 '''
+    trigger = pyqtSignal()
 
     def __int__(self):
         super(MoveThread5, self).__init__()
@@ -324,6 +362,7 @@ class MoveThread5(QThread):
     def run(self):
         Elevator_5.move()
         move5()
+        self.trigger.emit()
 
 
 class WorkThread(QThread):
@@ -336,9 +375,9 @@ class WorkThread(QThread):
     def run(self):
         self.trigger.emit()
 
-
 class DownWaitListThread(QThread):
     ''' assign tasks to elevators in downWaiting[] '''
+    trigger = pyqtSignal()
 
     def __int__(self):
         super(DownWaitListThread, self).__init__()
@@ -346,10 +385,12 @@ class DownWaitListThread(QThread):
     def run(self):
         if len(downWaiting):
             down(downWaiting.pop(0))
+        self.trigger.emit()
 
 
 class UpWaitListThread(QThread):
     ''' assign tasks to elevators in upWaiting[] '''
+    trigger = pyqtSignal()
 
     def __int__(self):
         super(UpWaitListThread, self).__init__()
@@ -357,16 +398,19 @@ class UpWaitListThread(QThread):
     def run(self):
         if len(upWaiting):
             up(upWaiting.pop(0))
+        self.trigger.emit()
 
 
 class ChangeThread(QThread):
     ''' the thread of changeFloor() '''
+    trigger = pyqtSignal()
 
     def __int__(self):
         super(ChangeThread, self).__init__()
 
     def run(self):
         changeFloor()
+        self.trigger.emit()
 
 
 def changeFloor():
@@ -376,6 +420,8 @@ def changeFloor():
     w.ui.floor_e3.setText(str(Elevator_3.currentFloor))
     w.ui.floor_e4.setText(str(Elevator_4.currentFloor))
     w.ui.floor_e5.setText(str(Elevator_5.currentFloor))
+
+    w.change.quit()
 
 
 def move1():
@@ -871,6 +917,8 @@ def insidePush(index, num):
 
 
 if __name__ == "__main__":
+    #   multiprocessing.freeze_support()
+
     Elevator_1 = Elevator()
     Elevator_2 = Elevator()
     Elevator_3 = Elevator()
