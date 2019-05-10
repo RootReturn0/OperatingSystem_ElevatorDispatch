@@ -15,8 +15,6 @@
 #
 # @Filename  : Controller.py
 
-# bug: down接取任务
-
 import sys
 import time
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -663,7 +661,7 @@ def up(num):
         elevatorDValue.append(abs(Elevator_1.currentFloor-num)+1)
     # the elevator must have no tasks downstairs
     elif len(Elevator_1.downList) == 0:
-        if len(Elevator_1.upList) and Elevator_1.currentFloor>=num:
+        if len(Elevator_1.upList) and Elevator_1.currentFloor >= num:
             elevatorDValue.append(
                 abs(Elevator_1.currentFloor-num)+2*(max(Elevator_1.upList)-Elevator_1.currentFloor))
         else:
@@ -673,7 +671,7 @@ def up(num):
     if Elevator_2.statusFree == True:
         elevatorDValue.append(abs(Elevator_2.currentFloor-num)+1)
     elif len(Elevator_2.downList) == 0:
-        if len(Elevator_2.upList) and Elevator_2.currentFloor>=num:
+        if len(Elevator_2.upList) and Elevator_2.currentFloor >= num:
             elevatorDValue.append(
                 abs(Elevator_2.currentFloor-num)+2*(max(Elevator_2.upList)-Elevator_2.currentFloor))
         else:
@@ -683,7 +681,7 @@ def up(num):
     if Elevator_3.statusFree == True:
         elevatorDValue.append(abs(Elevator_3.currentFloor-num)+1)
     elif len(Elevator_3.downList) == 0:
-        if len(Elevator_3.upList) and Elevator_3.currentFloor>=num:
+        if len(Elevator_3.upList) and Elevator_3.currentFloor >= num:
             elevatorDValue.append(
                 abs(Elevator_3.currentFloor-num)+2*(max(Elevator_3.upList)-Elevator_3.currentFloor))
         else:
@@ -693,7 +691,7 @@ def up(num):
     if Elevator_4.statusFree == True:
         elevatorDValue.append(abs(Elevator_4.currentFloor-num)+1)
     elif len(Elevator_4.downList) == 0:
-        if len(Elevator_4.upList) and Elevator_4.currentFloor>=num:
+        if len(Elevator_4.upList) and Elevator_4.currentFloor >= num:
             elevatorDValue.append(
                 abs(Elevator_4.currentFloor-num)+2*(max(Elevator_4.upList)-Elevator_4.currentFloor))
         else:
@@ -703,7 +701,7 @@ def up(num):
     if Elevator_5.statusFree == True:
         elevatorDValue.append(abs(Elevator_5.currentFloor-num)+1)
     elif len(Elevator_5.downList) == 0:
-        if len(Elevator_5.upList) and Elevator_5.currentFloor>=num:
+        if len(Elevator_5.upList) and Elevator_5.currentFloor >= num:
             elevatorDValue.append(
                 abs(Elevator_5.currentFloor-num)+2*(max(Elevator_5.upList)-Elevator_5.currentFloor))
         else:
@@ -766,7 +764,7 @@ def down(num):
         elevatorDValue.append(abs(Elevator_1.currentFloor-num)+1)
     # the elevator must have no tasks upstairs
     elif len(Elevator_1.upList) == 0:
-        if len(Elevator_1.downList) and Elevator_1.currentFloor<=num:
+        if len(Elevator_1.downList) and Elevator_1.currentFloor <= num:
             elevatorDValue.append(
                 abs(Elevator_1.currentFloor-num)+2*(Elevator_1.currentFloor)-min(Elevator_1.downList)-1)
         else:
@@ -776,7 +774,7 @@ def down(num):
     if Elevator_2.statusFree == True:
         elevatorDValue.append(abs(Elevator_2.currentFloor-num)+1)
     elif len(Elevator_2.upList) == 0:
-        if len(Elevator_2.downList) and Elevator_2.currentFloor<=num:
+        if len(Elevator_2.downList) and Elevator_2.currentFloor <= num:
             elevatorDValue.append(
                 abs(Elevator_2.currentFloor-num)+2*(Elevator_2.currentFloor)-min(Elevator_2.downList)-1)
         else:
@@ -786,7 +784,7 @@ def down(num):
     if Elevator_3.statusFree == True:
         elevatorDValue.append(abs(Elevator_3.currentFloor-num)+1)
     elif len(Elevator_3.upList) == 0:
-        if len(Elevator_3.downList) and Elevator_3.currentFloor<=num:
+        if len(Elevator_3.downList) and Elevator_3.currentFloor <= num:
             elevatorDValue.append(
                 abs(Elevator_3.currentFloor-num)+2*(Elevator_3.currentFloor)-min(Elevator_3.downList)-1)
         else:
@@ -796,7 +794,7 @@ def down(num):
     if Elevator_4.statusFree == True:
         elevatorDValue.append(abs(Elevator_4.currentFloor-num)+1)
     elif len(Elevator_4.upList) == 0:
-        if len(Elevator_4.downList) and Elevator_4.currentFloor<=num:
+        if len(Elevator_4.downList) and Elevator_4.currentFloor <= num:
             elevatorDValue.append(
                 abs(Elevator_4.currentFloor-num)+2*(Elevator_4.currentFloor)-min(Elevator_4.downList)-1)
         else:
@@ -806,7 +804,7 @@ def down(num):
     if Elevator_5.statusFree == True:
         elevatorDValue.append(abs(Elevator_5.currentFloor-num)+1)
     elif len(Elevator_5.upList) == 0:
-        if len(Elevator_5.downList) and Elevator_5.currentFloor<=num:
+        if len(Elevator_5.downList) and Elevator_5.currentFloor <= num:
             elevatorDValue.append(
                 abs(Elevator_5.currentFloor-num)+2*(Elevator_5.currentFloor)-min(Elevator_5.downList)-1)
         else:
