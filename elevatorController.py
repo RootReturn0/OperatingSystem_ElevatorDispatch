@@ -15,9 +15,10 @@
 #
 # @Filename  : Controller.py
 
+# bug: down接取任务
+
 import sys
 import time
-#import multiprocessing
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import QTimer, QThread, pyqtSignal
 from elevatorInterface import Ui_MainWindow
@@ -34,6 +35,7 @@ class Elevator:
         self.stay = False  # thread stay
         self.open = False  # door open
         self.currentFloor = 1
+        self.value = 0  # position value
         self.upList = []
         self.downList = []
 
@@ -42,16 +44,12 @@ class Elevator:
         # @param: self.statusFree;
         #         self.statusUp;
         #         self.statusDown
-        if len(self.upList) and self.statusUp:
-            return
-        if len(self.downList) and self.statusDown:
-            return
         if len(self.downList):
             if self.currentFloor < min(self.downList):
                 self.statusFree = False
                 self.statusUp = True
                 self.statusDown = False
-            else:
+            elif len(self.upList) == 0:
                 self.statusFree = False
                 self.statusUp = False
                 self.statusDown = True
@@ -60,7 +58,7 @@ class Elevator:
                 self.statusFree = False
                 self.statusUp = False
                 self.statusDown = True
-            else:
+            elif len(self.downList) == 0:
                 self.statusFree = False
                 self.statusUp = True
                 self.statusDown = False
@@ -257,45 +255,59 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.work.trigger.connect(lambda: self.moveElevator4.start())
         if Elevator_5.stay == False:
             self.work.trigger.connect(lambda: self.moveElevator5.start())
-        if (Elevator_1.statusUp == False or Elevator_2.statusUp == False or Elevator_3.statusUp == False
-                or Elevator_4.statusUp == False or Elevator_5.statusUp == False):
+        if (Elevator_1.statusUp == False
+            or Elevator_2.statusUp == False
+            or Elevator_3.statusUp == False
+            or Elevator_4.statusUp == False
+                or Elevator_5.statusUp == False):
             self.work.trigger.connect(lambda: self.downWaitList.start())
-        if (Elevator_1.statusDown == False or Elevator_2.statusDown == False or Elevator_3.statusDown == False
-                or Elevator_4.statusDown == False or Elevator_5.statusDown == False):
+        if (Elevator_1.statusDown == False
+            or Elevator_2.statusDown == False
+            or Elevator_3.statusDown == False
+            or Elevator_4.statusDown == False
+                or Elevator_5.statusDown == False):
             self.work.trigger.connect(lambda: self.upWaitList.start())
 
-        self.moveElevator1.trigger.connect(lambda:self.stop_moveElevator1())
-        self.moveElevator2.trigger.connect(lambda:self.stop_moveElevator2())
-        self.moveElevator3.trigger.connect(lambda:self.stop_moveElevator3())
-        self.moveElevator4.trigger.connect(lambda:self.stop_moveElevator4())
-        self.moveElevator5.trigger.connect(lambda:self.stop_moveElevator5())
-        self.work.trigger.connect(lambda:self.stop_work())
-        self.change.trigger.connect(lambda:self.stop_change())
-        self.downWaitList.trigger.connect(lambda:self.stop_downWaitList())
-        self.upWaitList.trigger.connect(lambda:self.stop_upWaitList())
+        self.moveElevator1.trigger.connect(lambda: self.stop_moveElevator1())
+        self.moveElevator2.trigger.connect(lambda: self.stop_moveElevator2())
+        self.moveElevator3.trigger.connect(lambda: self.stop_moveElevator3())
+        self.moveElevator4.trigger.connect(lambda: self.stop_moveElevator4())
+        self.moveElevator5.trigger.connect(lambda: self.stop_moveElevator5())
+        self.work.trigger.connect(lambda: self.stop_work())
+        self.change.trigger.connect(lambda: self.stop_change())
+        self.downWaitList.trigger.connect(lambda: self.stop_downWaitList())
+        self.upWaitList.trigger.connect(lambda: self.stop_upWaitList())
         self.timer = QTimer()
         self.timer.timeout.connect(lambda: self.work.start())
-        self.timer.start(10)
+        self.timer.start(1)
         self.timer_2 = QTimer()
         self.timer_2.timeout.connect(lambda: self.change.start())
-        self.timer_2.start(10)
+        self.timer_2.start(1)
 
     def stop_moveElevator1(self):
         self.moveElevator1.quit()
+
     def stop_moveElevator2(self):
         self.moveElevator2.quit()
+
     def stop_moveElevator3(self):
         self.moveElevator3.quit()
+
     def stop_moveElevator4(self):
         self.moveElevator4.quit()
+
     def stop_moveElevator5(self):
         self.moveElevator5.quit()
+
     def stop_work(self):
         self.work.quit()
+
     def stop_change(self):
         self.change.quit()
+
     def stop_downWaitList(self):
         self.downWaitList.quit()
+
     def stop_upWaitList(self):
         self.upWaitList.quit()
 
@@ -375,6 +387,7 @@ class WorkThread(QThread):
     def run(self):
         self.trigger.emit()
 
+
 class DownWaitListThread(QThread):
     ''' assign tasks to elevators in downWaiting[] '''
     trigger = pyqtSignal()
@@ -402,57 +415,111 @@ class UpWaitListThread(QThread):
 
 
 class ChangeThread(QThread):
-    ''' the thread of changeFloor() '''
+    ''' the thread of refreshMainWindow() '''
     trigger = pyqtSignal()
 
     def __int__(self):
         super(ChangeThread, self).__init__()
 
     def run(self):
-        changeFloor()
+        refreshMainWindow()
+        # if w.ui.pushButton_refresh.isEnabled():
+        #     w.ui.pushButton_refresh.setEnabled(False)
+        # else:
+        #     w.ui.pushButton_refresh.setEnabled(True)
         self.trigger.emit()
 
 
-def changeFloor():
-    # change the display of the floor number of each elevator
+def refreshMainWindow():
+    # change the display of MainWindow
     w.ui.floor_e1.setText(str(Elevator_1.currentFloor))
     w.ui.floor_e2.setText(str(Elevator_2.currentFloor))
     w.ui.floor_e3.setText(str(Elevator_3.currentFloor))
     w.ui.floor_e4.setText(str(Elevator_4.currentFloor))
     w.ui.floor_e5.setText(str(Elevator_5.currentFloor))
-
-    w.change.quit()
-
+    w.ui.elevator1Slider.setValue(Elevator_1.value)
+    w.ui.elevator2Slider.setValue(Elevator_2.value)
+    w.ui.elevator3Slider.setValue(Elevator_3.value)
+    w.ui.elevator4Slider.setValue(Elevator_4.value)
+    w.ui.elevator5Slider.setValue(Elevator_5.value)
+    if Elevator_1.ifArrive() or Elevator_1.open:
+        w.ui.status_e1_closed.setHidden(True)
+        w.ui.status_e1_open.setHidden(False)
+        w.ui.status_e1_running.setHidden(True)
+    elif Elevator_1.statusFree:
+        w.ui.status_e1_closed.setHidden(False)
+        w.ui.status_e1_open.setHidden(True)
+        w.ui.status_e1_running.setHidden(True)
+    elif Elevator_1.statusFree==False:
+        w.ui.status_e1_closed.setHidden(True)
+        w.ui.status_e1_open.setHidden(True)
+        w.ui.status_e1_running.setHidden(False)
+    if Elevator_2.ifArrive() or Elevator_2.open:
+        w.ui.status_e2_closed.setHidden(True)
+        w.ui.status_e2_open.setHidden(False)
+        w.ui.status_e2_running.setHidden(True)
+    elif Elevator_2.statusFree:
+        w.ui.status_e2_closed.setHidden(False)
+        w.ui.status_e2_open.setHidden(True)
+        w.ui.status_e2_running.setHidden(True)
+    elif Elevator_2.statusFree==False:
+        w.ui.status_e2_closed.setHidden(True)
+        w.ui.status_e2_open.setHidden(True)
+        w.ui.status_e2_running.setHidden(False)
+    if Elevator_3.ifArrive() or Elevator_3.open:
+        w.ui.status_e3_closed.setHidden(True)
+        w.ui.status_e3_open.setHidden(False)
+        w.ui.status_e3_running.setHidden(True)
+    elif Elevator_3.statusFree:
+        w.ui.status_e3_closed.setHidden(False)
+        w.ui.status_e3_open.setHidden(True)
+        w.ui.status_e3_running.setHidden(True)
+    elif Elevator_3.statusFree==False:
+        w.ui.status_e3_closed.setHidden(True)
+        w.ui.status_e3_open.setHidden(True)
+        w.ui.status_e3_running.setHidden(False)
+    if Elevator_4.ifArrive() or Elevator_4.open:
+        w.ui.status_e4_closed.setHidden(True)
+        w.ui.status_e4_open.setHidden(False)
+        w.ui.status_e4_running.setHidden(True)
+    elif Elevator_4.statusFree:
+        w.ui.status_e4_closed.setHidden(False)
+        w.ui.status_e4_open.setHidden(True)
+        w.ui.status_e4_running.setHidden(True)
+    elif Elevator_4.statusFree==False:
+        w.ui.status_e4_closed.setHidden(True)
+        w.ui.status_e4_open.setHidden(True)
+        w.ui.status_e4_running.setHidden(False)
+    if Elevator_5.ifArrive() or Elevator_5.open:
+        w.ui.status_e5_closed.setHidden(True)
+        w.ui.status_e5_open.setHidden(False)
+        w.ui.status_e5_running.setHidden(True)
+    elif Elevator_5.statusFree:
+        w.ui.status_e5_closed.setHidden(False)
+        w.ui.status_e5_open.setHidden(True)
+        w.ui.status_e5_running.setHidden(True)
+    elif Elevator_5.statusFree==False:
+        w.ui.status_e5_closed.setHidden(True)
+        w.ui.status_e5_open.setHidden(True)
+        w.ui.status_e5_running.setHidden(False)
+       
 
 def move1():
     # Move Elevator_1 in MainWindow
     if Elevator_1.stay == False:
         Elevator_1.stay = True
         if Elevator_1.ifArrive() or Elevator_1.open:
-            w.ui.status_e1.setStyleSheet("color: rgb(99,192,135);")
-            w.ui.status_e1.setText("open")
             time.sleep(1)
-            update1()
-        elif Elevator_1.statusFree:
-            w.ui.status_e1.setStyleSheet("color: rgb(223,129,113);")
-            w.ui.status_e1.setText("closed")
-            update1()
         elif Elevator_1.statusUp:
-            w.ui.status_e1.setStyleSheet("color: rgb(206,180,139);")
-            w.ui.status_e1.setText("running")
             for i in range(10):
-                time.sleep(0.05)
-                w.ui.elevator1Slider.setValue(
-                    w.ui.elevator1Slider.value()+1)
-            update1()
+                time.sleep(0.04)
+                Elevator_1.value += 1
         elif Elevator_1.statusDown:
-            w.ui.status_e1.setStyleSheet("color: rgb(206,180,139);")
-            w.ui.status_e1.setText("running")
             for i in range(10):
-                time.sleep(0.05)
-                w.ui.elevator1Slider.setValue(
-                    w.ui.elevator1Slider.value()-1)
-            update1()
+                time.sleep(0.04)
+                Elevator_1.value -= 1
+
+        update1()
 
 
 def move2():
@@ -460,30 +527,17 @@ def move2():
     if Elevator_2.stay == False:
         Elevator_2.stay = True
         if Elevator_2.ifArrive() or Elevator_2.open:
-            w.ui.status_e2.setStyleSheet("color: rgb(99,192,135);")
-            w.ui.status_e2.setText("open")
             time.sleep(1)
-            update2()
-        elif Elevator_2.statusFree:
-            w.ui.status_e2.setStyleSheet("color: rgb(223,129,113);")
-            w.ui.status_e2.setText("closed")
-            update2()
         elif Elevator_2.statusUp:
-            w.ui.status_e2.setStyleSheet("color: rgb(206,180,139);")
-            w.ui.status_e2.setText("running")
             for i in range(10):
-                time.sleep(0.05)
-                w.ui.elevator2Slider.setValue(
-                    w.ui.elevator2Slider.value()+1)
-            update2()
+                time.sleep(0.04)
+                Elevator_2.value += 1
         elif Elevator_2.statusDown:
-            w.ui.status_e2.setStyleSheet("color: rgb(206,180,139);")
-            w.ui.status_e2.setText("running")
             for i in range(10):
-                time.sleep(0.05)
-                w.ui.elevator2Slider.setValue(
-                    w.ui.elevator2Slider.value()-1)
-            update2()
+                time.sleep(0.04)
+                Elevator_2.value -= 1
+
+        update2()
 
 
 def move3():
@@ -491,30 +545,17 @@ def move3():
     if Elevator_3.stay == False:
         Elevator_3.stay = True
         if Elevator_3.ifArrive() or Elevator_3.open:
-            w.ui.status_e3.setStyleSheet("color: rgb(99,192,135);")
-            w.ui.status_e3.setText("open")
             time.sleep(1)
-            update3()
-        elif Elevator_3.statusFree:
-            w.ui.status_e3.setStyleSheet("color: rgb(223,129,113);")
-            w.ui.status_e3.setText("closed")
-            update3()
         elif Elevator_3.statusUp:
-            w.ui.status_e3.setStyleSheet("color: rgb(206,180,139);")
-            w.ui.status_e3.setText("running")
             for i in range(10):
-                time.sleep(0.05)
-                w.ui.elevator3Slider.setValue(
-                    w.ui.elevator3Slider.value()+1)
-            update3()
+                time.sleep(0.04)
+                Elevator_3.value += 1
         elif Elevator_3.statusDown:
-            w.ui.status_e3.setStyleSheet("color: rgb(206,180,139);")
-            w.ui.status_e3.setText("running")
             for i in range(10):
-                time.sleep(0.05)
-                w.ui.elevator3Slider.setValue(
-                    w.ui.elevator3Slider.value()-1)
-            update3()
+                time.sleep(0.04)
+                Elevator_3.value -= 1
+
+        update3()
 
 
 def move4():
@@ -522,30 +563,17 @@ def move4():
     if Elevator_4.stay == False:
         Elevator_4.stay = True
         if Elevator_4.ifArrive() or Elevator_4.open:
-            w.ui.status_e4.setStyleSheet("color: rgb(99,192,135);")
-            w.ui.status_e4.setText("open")
             time.sleep(1)
-            update4()
-        elif Elevator_4.statusFree:
-            w.ui.status_e4.setStyleSheet("color: rgb(223,129,113);")
-            w.ui.status_e4.setText("closed")
-            update4()
         elif Elevator_4.statusUp:
-            w.ui.status_e4.setStyleSheet("color: rgb(206,180,139);")
-            w.ui.status_e4.setText("running")
             for i in range(10):
-                time.sleep(0.05)
-                w.ui.elevator4Slider.setValue(
-                    w.ui.elevator4Slider.value()+1)
-            update4()
+                time.sleep(0.04)
+                Elevator_4.value += 1
         elif Elevator_4.statusDown:
-            w.ui.status_e4.setStyleSheet("color: rgb(206,180,139);")
-            w.ui.status_e4.setText("running")
             for i in range(10):
-                time.sleep(0.05)
-                w.ui.elevator4Slider.setValue(
-                    w.ui.elevator4Slider.value()-1)
-            update4()
+                time.sleep(0.04)
+                Elevator_4.value -= 1
+
+        update4()
 
 
 def move5():
@@ -553,30 +581,17 @@ def move5():
     if Elevator_5.stay == False:
         Elevator_5.stay = True
         if Elevator_5.ifArrive() or Elevator_5.open:
-            w.ui.status_e5.setStyleSheet("color: rgb(99,192,135);")
-            w.ui.status_e5.setText("open")
             time.sleep(1)
-            update5()
-        elif Elevator_5.statusFree:
-            w.ui.status_e5.setStyleSheet("color: rgb(223,129,113);")
-            w.ui.status_e5.setText("closed")
-            update5()
         elif Elevator_5.statusUp:
-            w.ui.status_e5.setStyleSheet("color: rgb(206,180,139);")
-            w.ui.status_e5.setText("running")
             for i in range(10):
-                time.sleep(0.05)
-                w.ui.elevator5Slider.setValue(
-                    w.ui.elevator5Slider.value()+1)
-            update5()
+                time.sleep(0.04)
+                Elevator_5.value += 1
         elif Elevator_5.statusDown:
-            w.ui.status_e5.setStyleSheet("color: rgb(206,180,139);")
-            w.ui.status_e5.setText("running")
             for i in range(10):
-                time.sleep(0.05)
-                w.ui.elevator5Slider.setValue(
-                    w.ui.elevator5Slider.value()-1)
-            update5()
+                time.sleep(0.04)
+                Elevator_5.value -= 1
+
+        update5()
 
 
 def update1():
@@ -650,32 +665,32 @@ def up(num):
     # make distance larger to lower the priority
     if Elevator_1.statusFree == True:
         elevatorDValue.append(abs(Elevator_1.currentFloor-num)+1)
-    # the elevator must have no tasks downstairs and the number of its current floor < int(num)
-    elif len(Elevator_1.downList) == 0 and Elevator_1.currentFloor < num:
+    # the elevator must have no tasks downstairs
+    elif len(Elevator_1.downList) == 0:
         elevatorDValue.append(abs(Elevator_1.currentFloor-num))
     else:
         elevatorDValue.append(100)
     if Elevator_2.statusFree == True:
         elevatorDValue.append(abs(Elevator_2.currentFloor-num)+1)
-    elif len(Elevator_2.downList) == 0 and Elevator_2.currentFloor < num:
+    elif len(Elevator_2.downList) == 0:
         elevatorDValue.append(abs(Elevator_2.currentFloor-num))
     else:
         elevatorDValue.append(100)
     if Elevator_3.statusFree == True:
         elevatorDValue.append(abs(Elevator_3.currentFloor-num)+1)
-    elif len(Elevator_3.downList) == 0 and Elevator_3.currentFloor < num:
+    elif len(Elevator_3.downList) == 0:
         elevatorDValue.append(abs(Elevator_3.currentFloor-num))
     else:
         elevatorDValue.append(100)
     if Elevator_4.statusFree == True:
         elevatorDValue.append(abs(Elevator_4.currentFloor-num)+1)
-    elif len(Elevator_4.downList) == 0 and Elevator_4.currentFloor < num:
+    elif len(Elevator_4.downList) == 0:
         elevatorDValue.append(abs(Elevator_4.currentFloor-num))
     else:
         elevatorDValue.append(100)
     if Elevator_5.statusFree == True:
         elevatorDValue.append(abs(Elevator_5.currentFloor-num)+1)
-    elif len(Elevator_5.downList) == 0 and Elevator_5.currentFloor < num:
+    elif len(Elevator_5.downList) == 0:
         elevatorDValue.append(abs(Elevator_5.currentFloor-num))
     else:
         elevatorDValue.append(100)
@@ -733,32 +748,32 @@ def down(num):
     # make distance larger to lower the priority
     if Elevator_1.statusFree == True:
         elevatorDValue.append(abs(Elevator_1.currentFloor-num)+1)
-    # the elevator must have no tasks downstairs and the number of its current floor > int(num)
-    elif len(Elevator_1.upList) == 0 and Elevator_1.currentFloor > num:
+    # the elevator must have no tasks upstairs
+    elif len(Elevator_1.upList) == 0:
         elevatorDValue.append(abs(Elevator_1.currentFloor-num))
     else:
         elevatorDValue.append(100)
     if Elevator_2.statusFree == True:
         elevatorDValue.append(abs(Elevator_2.currentFloor-num)+1)
-    elif len(Elevator_2.upList) == 0 and Elevator_2.currentFloor > num:
+    elif len(Elevator_2.upList) == 0:
         elevatorDValue.append(abs(Elevator_2.currentFloor-num))
     else:
         elevatorDValue.append(100)
     if Elevator_3.statusFree == True:
         elevatorDValue.append(abs(Elevator_3.currentFloor-num)+1)
-    elif len(Elevator_3.upList) == 0 and Elevator_3.currentFloor > num:
+    elif len(Elevator_3.upList) == 0:
         elevatorDValue.append(abs(Elevator_3.currentFloor-num))
     else:
         elevatorDValue.append(100)
     if Elevator_4.statusFree == True:
         elevatorDValue.append(abs(Elevator_4.currentFloor-num)+1)
-    elif len(Elevator_4.upList) == 0 and Elevator_4.currentFloor > num:
+    elif len(Elevator_4.upList) == 0:
         elevatorDValue.append(abs(Elevator_4.currentFloor-num))
     else:
         elevatorDValue.append(100)
     if Elevator_5.statusFree == True:
         elevatorDValue.append(abs(Elevator_5.currentFloor-num)+1)
-    elif len(Elevator_5.upList) == 0 and Elevator_5.currentFloor > num:
+    elif len(Elevator_5.upList) == 0:
         elevatorDValue.append(abs(Elevator_5.currentFloor-num))
     else:
         elevatorDValue.append(100)
@@ -917,8 +932,6 @@ def insidePush(index, num):
 
 
 if __name__ == "__main__":
-    #   multiprocessing.freeze_support()
-
     Elevator_1 = Elevator()
     Elevator_2 = Elevator()
     Elevator_3 = Elevator()
