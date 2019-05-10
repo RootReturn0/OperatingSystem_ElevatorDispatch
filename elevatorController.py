@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-# -*- coding: utf-8 -*-
 
 # @Project   : Elevator Dispatch
 #
@@ -34,14 +33,16 @@ class Elevator:
         self.open = False  # door open
         self.currentFloor = 1
         self.value = 0  # position value
-        self.upList = []
-        self.downList = []
+        self.upList = []  # users need to go up
+        self.downList = [] # users need to go down
 
     def move(self):
+        ##
         # change status of Elevator
         # @param: self.statusFree;
         #         self.statusUp;
         #         self.statusDown
+        #
         if len(self.downList):
             if self.currentFloor < min(self.downList):
                 self.statusFree = False
@@ -66,10 +67,12 @@ class Elevator:
             self.statusDown = False
 
     def updateFloor(self):
+        ##
         # change status of floors
         # @parma: self.upList;
         #         self.downList;
         #         self.currentFloor
+        #
         if self.statusUp and self.currentFloor in self.upList:
             self.upList.remove(self.currentFloor)
             return
@@ -254,15 +257,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         if Elevator_5.stay == False:
             self.work.trigger.connect(lambda: self.moveElevator5.start())
         if (Elevator_1.statusUp == False
-            or Elevator_2.statusUp == False
-            or Elevator_3.statusUp == False
-            or Elevator_4.statusUp == False
+                or Elevator_2.statusUp == False
+                or Elevator_3.statusUp == False
+                or Elevator_4.statusUp == False
                 or Elevator_5.statusUp == False):
             self.work.trigger.connect(lambda: self.downWaitList.start())
         if (Elevator_1.statusDown == False
-            or Elevator_2.statusDown == False
-            or Elevator_3.statusDown == False
-            or Elevator_4.statusDown == False
+                or Elevator_2.statusDown == False
+                or Elevator_3.statusDown == False
+                or Elevator_4.statusDown == False
                 or Elevator_5.statusDown == False):
             self.work.trigger.connect(lambda: self.upWaitList.start())
 
@@ -499,7 +502,11 @@ def refreshMainWindow():
 
 
 def move1():
+    ##
     # Move Elevator_1 in MainWindow
+    # @param: Elecator.stay;
+    #         Elevator.value
+    #         
     if Elevator_1.stay == False:
         Elevator_1.stay = True
         if Elevator_1.ifArrive() or Elevator_1.open:
@@ -517,7 +524,11 @@ def move1():
 
 
 def move2():
+    ##
     # Move Elevator_2 in MainWindow
+    # @param: Elecator.stay;
+    #         Elevator.value
+    #      
     if Elevator_2.stay == False:
         Elevator_2.stay = True
         if Elevator_2.ifArrive() or Elevator_2.open:
@@ -535,7 +546,11 @@ def move2():
 
 
 def move3():
+    ##
     # Move Elevator_3 in MainWindow
+    # @param: Elecator.stay;
+    #         Elevator.value
+    #      
     if Elevator_3.stay == False:
         Elevator_3.stay = True
         if Elevator_3.ifArrive() or Elevator_3.open:
@@ -553,7 +568,11 @@ def move3():
 
 
 def move4():
+    ##
     # Move Elevator_4 in MainWindow
+    # @param: Elecator.stay;
+    #         Elevator.value
+    #      
     if Elevator_4.stay == False:
         Elevator_4.stay = True
         if Elevator_4.ifArrive() or Elevator_4.open:
@@ -571,7 +590,11 @@ def move4():
 
 
 def move5():
+    ##
     # Move Elevator_5 in MainWindow
+    # @param: Elecator.stay;
+    #         Elevator.value
+    #      
     if Elevator_5.stay == False:
         Elevator_5.stay = True
         if Elevator_5.ifArrive() or Elevator_5.open:
@@ -589,20 +612,24 @@ def move5():
 
 
 def update1():
+    ##
     # update Elevator_1's status when its thread finished
     # @param: Elevator_1.stay;
     #         Elevator_1.open;
     # @func : Elevator_1.updateFloor()
+    #
     Elevator_1.stay = False
     Elevator_1.open = False
     Elevator_1.updateFloor()
 
 
 def update2():
+    ##
     # update Elevator_2's status when its thread finished
     # @param: Elevator_2.stay;
     #         Elevator_2.open;
     # @func : Elevator_2.updateFloor()
+    #
     Elevator_2.stay = False
     Elevator_2.open = False
     Elevator_2.updateFloor()
@@ -639,12 +666,16 @@ def update5():
 
 
 def up(num):
+    ##
     # When the up buttons outside the elevators are pushed
     # Choose proper elevator to response
-    # Priority : 1. distance
-    #            2. going down
-    #            3. free
+    # Priority : 1. no tasks in downList
+    #            2. distance
+    #            3. going up
+    #            4. free
     # If there are no elevators available currently, append the request into upWaiting list
+    # @param: Elevator.upList
+    #
 
     # at least 1 elevator is working for the task
     if((len(Elevator_1.downList) == 0 and Elevator_1.currentFloor == num and Elevator_1.open)
@@ -742,12 +773,16 @@ def up(num):
 
 
 def down(num):
+    ##
     # When the down buttons outside the elevators are pushed
     # Choose proper elevator to response
-    # Priority : 1. closest
-    #            2. going down
-    #            3. free
+    # Priority : 1. no tasks in upList
+    #            2. distance
+    #            3. going down
+    #            4. free
     # If there are no elevators available currently, append the request into downWaiting list
+    # @param: Elevator.downList
+    #
 
     # at least 1 elevator is working for the task
     if((len(Elevator_1.upList) == 0 and Elevator_1.currentFloor == num and Elevator_1.open)
@@ -844,7 +879,11 @@ def down(num):
 
 
 def insidePush(index, num):
+    ##
     # When the buttons inside the elevators are pushed
+    # @param: Elevator.upList;
+    #         Elevator.downList
+    #
 
     if index == 1:
         # single click to assign the task
