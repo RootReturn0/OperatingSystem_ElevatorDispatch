@@ -665,7 +665,7 @@ def up(num):
     if Elevator_1.statusFree == True:
         elevatorDValue.append(abs(Elevator_1.currentFloor-num)+1)
     # the elevator is doing tasks in Elevator.upList
-    elif len(Elevator_1.upList) and Elevator_1.statusUp:
+    elif len(Elevator_1.upList) and len(Elevator_1.downList)==0 and Elevator_1.statusUp:
         if Elevator_1.currentFloor > num:
             # realDistance = distance
             #                + 2 * maxWorkDistance
@@ -688,7 +688,7 @@ def up(num):
             + (1/0.4)*len(Elevator_1.downList))
     if Elevator_2.statusFree == True:
         elevatorDValue.append(abs(Elevator_2.currentFloor-num)+1)
-    elif len(Elevator_2.upList) and Elevator_2.statusUp:
+    elif len(Elevator_2.upList) and len(Elevator_2.downList)==0 and Elevator_2.statusUp:
         if Elevator_2.currentFloor > num:
             elevatorDValue.append(
                 Elevator_2.currentFloor-num
@@ -703,7 +703,7 @@ def up(num):
             + (1/0.4)*len(Elevator_2.downList))
     if Elevator_3.statusFree == True:
         elevatorDValue.append(abs(Elevator_3.currentFloor-num)+1)
-    elif len(Elevator_3.upList) and Elevator_3.statusUp:
+    elif len(Elevator_3.upList) and len(Elevator_3.downList)==0 and Elevator_3.statusUp:
         if Elevator_3.currentFloor > num:
             elevatorDValue.append(
                 Elevator_3.currentFloor-num
@@ -718,7 +718,7 @@ def up(num):
             + (1/0.4)*len(Elevator_3.downList))
     if Elevator_4.statusFree == True:
         elevatorDValue.append(abs(Elevator_4.currentFloor-num)+1)
-    elif len(Elevator_4.upList) and Elevator_4.statusUp:
+    elif len(Elevator_4.upList) and len(Elevator_4.downList)==0 and Elevator_4.statusUp:
         if Elevator_4.currentFloor > num:
             elevatorDValue.append(
                 Elevator_4.currentFloor-num
@@ -733,7 +733,7 @@ def up(num):
             + (1/0.4)*len(Elevator_4.downList))
     if Elevator_5.statusFree == True:
         elevatorDValue.append(abs(Elevator_5.currentFloor-num)+1)
-    elif len(Elevator_5.upList) and Elevator_5.statusUp:
+    elif len(Elevator_5.upList)  and len(Elevator_5.downList)==0 and Elevator_5.statusUp:
         if Elevator_5.currentFloor > num:
             elevatorDValue.append(
                 Elevator_5.currentFloor-num
@@ -818,7 +818,7 @@ def down(num):
     if Elevator_1.statusFree == True:
         elevatorDValue.append(abs(Elevator_1.currentFloor-num)+1)
     # the elevator is doing tasks in Elevator.downList
-    elif len(Elevator_1.downList) and Elevator_1.statusDown:
+    elif len(Elevator_1.downList) and len(Elevator_1.upList)==0 and Elevator_1.statusDown:
             # realDistance = distance
             #                + 2 * maxWorkDistance
             #                + (openTime / runningTimeForASingleFloor) * len(Elevator.downList)
@@ -841,7 +841,7 @@ def down(num):
             + (1/0.4)*len(Elevator_1.upList))
     if Elevator_2.statusFree == True:
         elevatorDValue.append(abs(Elevator_2.currentFloor-num)+1)
-    elif len(Elevator_2.downList) and Elevator_2.statusDown:
+    elif len(Elevator_2.downList) and len(Elevator_2.upList)==0 and Elevator_2.statusDown:
         if Elevator_2.currentFloor < num:
             elevatorDValue.append(
                 num-Elevator_2.currentFloor
@@ -856,7 +856,7 @@ def down(num):
             + (1/0.4)*len(Elevator_2.upList))
     if Elevator_3.statusFree == True:
         elevatorDValue.append(abs(Elevator_3.currentFloor-num)+1)
-    elif len(Elevator_3.downList) and Elevator_3.statusDown:
+    elif len(Elevator_3.downList) and len(Elevator_3.upList)==0 and Elevator_3.statusDown:
         if Elevator_3.currentFloor < num:
             elevatorDValue.append(
                 num-Elevator_3.currentFloor
@@ -871,7 +871,7 @@ def down(num):
             + (1/0.4)*len(Elevator_3.upList))
     if Elevator_4.statusFree == True:
         elevatorDValue.append(abs(Elevator_4.currentFloor-num)+1)
-    elif len(Elevator_4.downList) and Elevator_4.statusDown:
+    elif len(Elevator_4.downList) and len(Elevator_4.upList)==0 and Elevator_4.statusDown:
         if Elevator_4.currentFloor < num:
             elevatorDValue.append(
                 num-Elevator_4.currentFloor
@@ -886,7 +886,7 @@ def down(num):
             + (1/0.4)*len(Elevator_4.upList))
     if Elevator_5.statusFree == True:
         elevatorDValue.append(abs(Elevator_5.currentFloor-num)+1)
-    elif len(Elevator_5.downList) and Elevator_5.statusDown:
+    elif len(Elevator_5.downList) and len(Elevator_5.upList)==0 and Elevator_5.statusDown:
         if Elevator_5.currentFloor < num:
             elevatorDValue.append(
                 num-Elevator_5.currentFloor
