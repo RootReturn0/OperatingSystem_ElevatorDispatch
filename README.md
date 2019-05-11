@@ -5,6 +5,7 @@
 Mac OS Mojave
 
 ##开发环境依赖
+
 ### Python3
 [python3](https://www.python.org/getit/) 
 
@@ -28,6 +29,7 @@ Mac OS Mojave
 * 电梯运行通过一层楼间隔所需时间为0.4s
 	
 ##使用说明
+
 ###1、 呼叫电梯
 * **上行**
 
