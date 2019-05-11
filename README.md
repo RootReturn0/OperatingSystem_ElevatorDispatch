@@ -93,7 +93,7 @@ Click the corresponding number button in the elevator
 
 ### 3、 Interface Pause
 
-***This did not happen in the test of the lateset version***
+***This did not happen in the tests of the lateset version***
 
 If this happens, click the `Refresh` button in the lower left corner to perform a refresh.
 
