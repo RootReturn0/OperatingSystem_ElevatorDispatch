@@ -701,29 +701,18 @@ def up(num):
     # assign the task to the elevator having the shortest DValue
     if elevatorDValue.index(min(elevatorDValue)) == 0:
         if num not in Elevator_1.upList:
-            if Elevator_1.currentFloor == num and Elevator_1.statusFree:
-                Elevator_1.open = True
             Elevator_1.upList.append(num)
     elif elevatorDValue.index(min(elevatorDValue)) == 1:
         if num not in Elevator_2.upList:
-            if Elevator_2.currentFloor == num and Elevator_2.statusFree:
-                Elevator_2.open = True
-                Elevator_1.upList.append(num)
             Elevator_2.upList.append(num)
     elif elevatorDValue.index(min(elevatorDValue)) == 2:
         if num not in Elevator_3.upList:
-            if Elevator_3.currentFloor == num and Elevator_3.statusFree:
-                Elevator_3.open = True
             Elevator_3.upList.append(num)
     elif elevatorDValue.index(min(elevatorDValue)) == 3:
         if num not in Elevator_4.upList:
-            if Elevator_4.currentFloor == num and Elevator_4.statusFree:
-                Elevator_4.open = True
             Elevator_4.upList.append(num)
     elif elevatorDValue.index(min(elevatorDValue)) == 4:
         if num not in Elevator_5.upList:
-            if Elevator_5.currentFloor == num and Elevator_5.statusFree:
-                Elevator_5.open = True
             Elevator_5.upList.append(num)
 
 
@@ -850,28 +839,18 @@ def down(num):
     # assign the task to the elevator having the shortest DValue
     if elevatorDValue.index(min(elevatorDValue)) == 0:
         if num not in Elevator_1.downList:
-            if Elevator_1.currentFloor == num and Elevator_1.statusFree:
-                Elevator_1.open = True
             Elevator_1.downList.append(num)
     elif elevatorDValue.index(min(elevatorDValue)) == 1:
         if num not in Elevator_2.downList:
-            if Elevator_2.currentFloor == num and Elevator_2.statusFree:
-                Elevator_2.open = True
             Elevator_2.downList.append(num)
     elif elevatorDValue.index(min(elevatorDValue)) == 2:
         if num not in Elevator_3.downList:
-            if Elevator_3.currentFloor == num and Elevator_3.statusFree:
-                Elevator_3.open = True
             Elevator_3.downList.append(num)
     elif elevatorDValue.index(min(elevatorDValue)) == 3:
         if num not in Elevator_4.downList:
-            if Elevator_4.currentFloor == num and Elevator_4.statusFree:
-                Elevator_4.open = True
             Elevator_4.downList.append(num)
     elif elevatorDValue.index(min(elevatorDValue)) == 4:
         if num not in Elevator_5.downList:
-            if Elevator_5.currentFloor == num and Elevator_5.statusFree:
-                Elevator_5.open = True
             Elevator_5.downList.append(num)
 
 
