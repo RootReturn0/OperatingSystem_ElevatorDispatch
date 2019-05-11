@@ -249,8 +249,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.moveElevator5 = MoveThread5()
         self.work = WorkThread()
         self.change = ChangeThread()
-        self.downWaitList = DownWaitListThread()
-        self.upWaitList = UpWaitListThread()
         if Elevator_1.busy == False:
             self.work.trigger.connect(lambda: self.moveElevator1.start())
         if Elevator_2.busy == False:
@@ -261,18 +259,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.work.trigger.connect(lambda: self.moveElevator4.start())
         if Elevator_5.busy == False:
             self.work.trigger.connect(lambda: self.moveElevator5.start())
-        if (Elevator_1.statusUp == False
-                or Elevator_2.statusUp == False
-                or Elevator_3.statusUp == False
-                or Elevator_4.statusUp == False
-                or Elevator_5.statusUp == False):
-            self.work.trigger.connect(lambda: self.downWaitList.start())
-        if (Elevator_1.statusDown == False
-                or Elevator_2.statusDown == False
-                or Elevator_3.statusDown == False
-                or Elevator_4.statusDown == False
-                or Elevator_5.statusDown == False):
-            self.work.trigger.connect(lambda: self.upWaitList.start())
 
         self.moveElevator1.trigger.connect(lambda: self.stop_moveElevator1())
         self.moveElevator2.trigger.connect(lambda: self.stop_moveElevator2())
@@ -281,8 +267,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.moveElevator5.trigger.connect(lambda: self.stop_moveElevator5())
         self.work.trigger.connect(lambda: self.stop_work())
         self.change.trigger.connect(lambda: self.stop_change())
-        self.downWaitList.trigger.connect(lambda: self.stop_downWaitList())
-        self.upWaitList.trigger.connect(lambda: self.stop_upWaitList())
         self.timer = QTimer()
         self.timer.timeout.connect(lambda: self.work.start())
         self.timer.start(1)
@@ -310,12 +294,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def stop_change(self):
         self.change.quit()
-
-    def stop_downWaitList(self):
-        self.downWaitList.quit()
-
-    def stop_upWaitList(self):
-        self.upWaitList.quit()
 
 
 class MoveThread1(QThread):
@@ -396,32 +374,6 @@ class WorkThread(QThread):
         super(WorkThread, self).__init__()
 
     def run(self):
-        self.trigger.emit()
-
-
-class DownWaitListThread(QThread):
-    ''' assign tasks to elevators in downWaiting[] '''
-    trigger = pyqtSignal()
-
-    def __int__(self):
-        super(DownWaitListThread, self).__init__()
-
-    def run(self):
-        if len(downWaiting):
-            down(downWaiting.pop(0))
-        self.trigger.emit()
-
-
-class UpWaitListThread(QThread):
-    ''' assign tasks to elevators in upWaiting[] '''
-    trigger = pyqtSignal()
-
-    def __int__(self):
-        super(UpWaitListThread, self).__init__()
-
-    def run(self):
-        if len(upWaiting):
-            up(upWaiting.pop(0))
         self.trigger.emit()
 
 
@@ -630,10 +582,9 @@ def up(num):
     ##
     # When the up buttons outside the elevators are pushed
     # Choose proper elevator to response
-    # Priority : 1. shortest distance
+    # Priority : 1. shortest distance value
     #            2. working
     #            3. free
-    # If there are no elevators available currently, append the request into upWaiting list
     # @param: Elevator.upList
     #
 
@@ -659,7 +610,7 @@ def up(num):
             Elevator_5.open = True
         return
 
-    elevatorDValue = []  # the distance between each elevator and the target floor
+    elevatorDValue = []  # the distance value
 
     # make distance larger to lower the priority
     if Elevator_1.statusFree == True:
@@ -667,21 +618,21 @@ def up(num):
     # the elevator is doing tasks in Elevator.upList
     elif len(Elevator_1.upList) and len(Elevator_1.downList)==0 and Elevator_1.statusUp:
         if Elevator_1.currentFloor > num:
-            # realDistance = distance
-            #                + 2 * maxWorkDistance
-            #                + (openTime / runningTimeForASingleFloor) * len(Elevator.upList)
+            # DValue = distance
+            #          + 2 * maxWorkDistance
+            #          + (openTime / runningTimeForASingleFloor) * len(Elevator.upList)
             elevatorDValue.append(
                 Elevator_1.currentFloor-num
                 + 2*(20-Elevator_1.currentFloor)
                 + (1/0.4)*len(Elevator_1.upList))
         else:
-            # realDistance = distance
+            # DValue = distance
             elevatorDValue.append(num-Elevator_1.currentFloor)
     # the elevator is possible doing or to do tasks in Elevator.downList
     else:
-        # realDistance = distance
-        #                + 2 * maxWorkDistance
-        #                + (openTime / runningTimeForASingleFloor) * len(Elevator.downList)
+        # DValue = distance
+        #          + 2 * maxWorkDistance
+        #          + (openTime / runningTimeForASingleFloor) * len(Elevator.downList)
         elevatorDValue.append(
             num-Elevator_1.currentFloor
             + 2*(Elevator_1.currentFloor)
@@ -747,46 +698,42 @@ def up(num):
             + 2*(Elevator_5.currentFloor)
             + (1/0.4)*len(Elevator_5.downList))
 
-    # assign the task to some elevator or add it to upWaiting[]
-    if min(elevatorDValue) == 100:
-        upWaiting.append(num)
-    else:
-        if elevatorDValue.index(min(elevatorDValue)) == 0:
-            if num not in Elevator_1.upList:
-                if Elevator_1.currentFloor == num and Elevator_1.statusFree:
-                    Elevator_1.open = True
+    # assign the task to the elevator having the shortest DValue
+    if elevatorDValue.index(min(elevatorDValue)) == 0:
+        if num not in Elevator_1.upList:
+            if Elevator_1.currentFloor == num and Elevator_1.statusFree:
+                Elevator_1.open = True
+            Elevator_1.upList.append(num)
+    elif elevatorDValue.index(min(elevatorDValue)) == 1:
+        if num not in Elevator_2.upList:
+            if Elevator_2.currentFloor == num and Elevator_2.statusFree:
+                Elevator_2.open = True
                 Elevator_1.upList.append(num)
-        elif elevatorDValue.index(min(elevatorDValue)) == 1:
-            if num not in Elevator_2.upList:
-                if Elevator_2.currentFloor == num and Elevator_2.statusFree:
-                    Elevator_2.open = True
-                    Elevator_1.upList.append(num)
-                Elevator_2.upList.append(num)
-        elif elevatorDValue.index(min(elevatorDValue)) == 2:
-            if num not in Elevator_3.upList:
-                if Elevator_3.currentFloor == num and Elevator_3.statusFree:
-                    Elevator_3.open = True
-                Elevator_3.upList.append(num)
-        elif elevatorDValue.index(min(elevatorDValue)) == 3:
-            if num not in Elevator_4.upList:
-                if Elevator_4.currentFloor == num and Elevator_4.statusFree:
-                    Elevator_4.open = True
-                Elevator_4.upList.append(num)
-        elif elevatorDValue.index(min(elevatorDValue)) == 4:
-            if num not in Elevator_5.upList:
-                if Elevator_5.currentFloor == num and Elevator_5.statusFree:
-                    Elevator_5.open = True
-                Elevator_5.upList.append(num)
+            Elevator_2.upList.append(num)
+    elif elevatorDValue.index(min(elevatorDValue)) == 2:
+        if num not in Elevator_3.upList:
+            if Elevator_3.currentFloor == num and Elevator_3.statusFree:
+                Elevator_3.open = True
+            Elevator_3.upList.append(num)
+    elif elevatorDValue.index(min(elevatorDValue)) == 3:
+        if num not in Elevator_4.upList:
+            if Elevator_4.currentFloor == num and Elevator_4.statusFree:
+                Elevator_4.open = True
+            Elevator_4.upList.append(num)
+    elif elevatorDValue.index(min(elevatorDValue)) == 4:
+        if num not in Elevator_5.upList:
+            if Elevator_5.currentFloor == num and Elevator_5.statusFree:
+                Elevator_5.open = True
+            Elevator_5.upList.append(num)
 
 
 def down(num):
     ##
     # When the down buttons outside the elevators are pushed
     # Choose proper elevator to response
-    # Priority : 1. shortest distance
+    # Priority : 1. shortest distance value
     #            2. working
     #            3. free
-    # If there are no elevators available currently, append the request into downWaiting list
     # @param: Elevator.downList
     #
 
@@ -819,22 +766,22 @@ def down(num):
         elevatorDValue.append(abs(Elevator_1.currentFloor-num)+1)
     # the elevator is doing tasks in Elevator.downList
     elif len(Elevator_1.downList) and len(Elevator_1.upList)==0 and Elevator_1.statusDown:
-            # realDistance = distance
-            #                + 2 * maxWorkDistance
-            #                + (openTime / runningTimeForASingleFloor) * len(Elevator.downList)
+            # DValue = distance
+            #          + 2 * maxWorkDistance
+            #          + (openTime / runningTimeForASingleFloor) * len(Elevator.downList)
         if Elevator_1.currentFloor < num:
             elevatorDValue.append(
                 num-Elevator_1.currentFloor
                 + 2*(Elevator_1.currentFloor)
                 + (1/0.4)*len(Elevator_1.downList))
         else:
-            # realDistance = distance
+            # Dvalue = distance
             elevatorDValue.append(Elevator_1.currentFloor-num)
     # the elevator is possible doing or to do tasks in Elevator.upList
     else:
-        # realDistance = distance
-        #                + 2 * maxWorkDistance
-        #                + (openTime / runningTimeForASingleFloor) * len(Elevator.downList)
+        # Dvalue = distance
+        #          + 2 * maxWorkDistance
+        #          + (openTime / runningTimeForASingleFloor) * len(Elevator.downList)
         elevatorDValue.append(
             Elevator_1.currentFloor-num
             + 2*(20-Elevator_1.currentFloor)
@@ -900,35 +847,32 @@ def down(num):
             + 2*(20-Elevator_5.currentFloor)
             + (1/0.4)*len(Elevator_5.upList))
 
-    # assign the task to some elevator or add it to downWaiting[]
-    if min(elevatorDValue) == 100:
-        downWaiting.append(num)
-    else:
-        if elevatorDValue.index(min(elevatorDValue)) == 0:
-            if num not in Elevator_1.downList:
-                if Elevator_1.currentFloor == num and Elevator_1.statusFree:
-                    Elevator_1.open = True
-                Elevator_1.downList.append(num)
-        elif elevatorDValue.index(min(elevatorDValue)) == 1:
-            if num not in Elevator_2.downList:
-                if Elevator_2.currentFloor == num and Elevator_2.statusFree:
-                    Elevator_2.open = True
-                Elevator_2.downList.append(num)
-        elif elevatorDValue.index(min(elevatorDValue)) == 2:
-            if num not in Elevator_3.downList:
-                if Elevator_3.currentFloor == num and Elevator_3.statusFree:
-                    Elevator_3.open = True
-                Elevator_3.downList.append(num)
-        elif elevatorDValue.index(min(elevatorDValue)) == 3:
-            if num not in Elevator_4.downList:
-                if Elevator_4.currentFloor == num and Elevator_4.statusFree:
-                    Elevator_4.open = True
-                Elevator_4.downList.append(num)
-        elif elevatorDValue.index(min(elevatorDValue)) == 4:
-            if num not in Elevator_5.downList:
-                if Elevator_5.currentFloor == num and Elevator_5.statusFree:
-                    Elevator_5.open = True
-                Elevator_5.downList.append(num)
+    # assign the task to the elevator having the shortest DValue
+    if elevatorDValue.index(min(elevatorDValue)) == 0:
+        if num not in Elevator_1.downList:
+            if Elevator_1.currentFloor == num and Elevator_1.statusFree:
+                Elevator_1.open = True
+            Elevator_1.downList.append(num)
+    elif elevatorDValue.index(min(elevatorDValue)) == 1:
+        if num not in Elevator_2.downList:
+            if Elevator_2.currentFloor == num and Elevator_2.statusFree:
+                Elevator_2.open = True
+            Elevator_2.downList.append(num)
+    elif elevatorDValue.index(min(elevatorDValue)) == 2:
+        if num not in Elevator_3.downList:
+            if Elevator_3.currentFloor == num and Elevator_3.statusFree:
+                Elevator_3.open = True
+            Elevator_3.downList.append(num)
+    elif elevatorDValue.index(min(elevatorDValue)) == 3:
+        if num not in Elevator_4.downList:
+            if Elevator_4.currentFloor == num and Elevator_4.statusFree:
+                Elevator_4.open = True
+            Elevator_4.downList.append(num)
+    elif elevatorDValue.index(min(elevatorDValue)) == 4:
+        if num not in Elevator_5.downList:
+            if Elevator_5.currentFloor == num and Elevator_5.statusFree:
+                Elevator_5.open = True
+            Elevator_5.downList.append(num)
 
 
 def insidePush(index, num):
@@ -1065,8 +1009,6 @@ if __name__ == "__main__":
     Elevator_3 = Elevator()
     Elevator_4 = Elevator()
     Elevator_5 = Elevator()
-    upWaiting = []
-    downWaiting = []
 
     app = QtWidgets.QApplication(sys.argv)
     w = MainWindow()
