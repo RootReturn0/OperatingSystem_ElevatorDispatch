@@ -770,7 +770,7 @@ def down(num):
     else:
         # Dvalue = distance
         #          + 2 * maxWorkDistance
-        #          + (openTime / runningTimeForASingleFloor) * len(Elevator.downList)
+        #          + (openTime / runningTimeForASingleFloor) * len(Elevator.upList)
         elevatorDValue.append(
             Elevator_1.currentFloor-num
             + 2*(20-Elevator_1.currentFloor)
@@ -860,7 +860,6 @@ def insidePush(index, num):
     # @param: Elevator.upList;
     #         Elevator.downList
     #
-
     if index == 1:
         # single click to assign the task
         if num == Elevator_1.currentFloor:
