@@ -14,6 +14,13 @@
 #
 # @Filename  : Controller.py
 
+'''
+1.  Assume that everyone presses the right direction button
+    before he enters the elevators.
+2.  Assume that everyone presses the target button immediately
+    when he enters the elevators.
+'''
+
 import sys
 import time
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -43,15 +50,7 @@ class Elevator:
         #         self.statusUp;
         #         self.statusDown
         #
-        if self.currentFloor in self.downList:
-            self.statusFree = False
-            self.statusUp = False
-            self.statusDown = True
-        elif self.currentFloor in self.upList:
-            self.statusFree = False
-            self.statusUp = True
-            self.statusDown = False
-        elif len(self.downList):
+        if len(self.downList):
             if self.currentFloor < min(self.downList):
                 self.statusFree = False
                 self.statusUp = True
