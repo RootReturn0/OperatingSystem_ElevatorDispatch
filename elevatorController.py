@@ -408,9 +408,15 @@ def refreshMainWindow():
         w.ui.status_e1_closed.setHidden(False)
         w.ui.status_e1_open.setHidden(True)
         w.ui.status_e1_running.setHidden(True)
-    elif Elevator_1.statusFree == False:
+    elif Elevator_1.statusUp == False:
         w.ui.status_e1_closed.setHidden(True)
         w.ui.status_e1_open.setHidden(True)
+        w.ui.status_e1_running.setText("down")
+        w.ui.status_e1_running.setHidden(False)
+    else:
+        w.ui.status_e1_closed.setHidden(True)
+        w.ui.status_e1_open.setHidden(True)
+        w.ui.status_e1_running.setText("up")
         w.ui.status_e1_running.setHidden(False)
     if Elevator_2.open:
         w.ui.status_e2_closed.setHidden(True)
@@ -420,9 +426,15 @@ def refreshMainWindow():
         w.ui.status_e2_closed.setHidden(False)
         w.ui.status_e2_open.setHidden(True)
         w.ui.status_e2_running.setHidden(True)
-    elif Elevator_2.statusFree == False:
+    elif Elevator_2.statusUp == False:
         w.ui.status_e2_closed.setHidden(True)
         w.ui.status_e2_open.setHidden(True)
+        w.ui.status_e2_running.setText("down")
+        w.ui.status_e2_running.setHidden(False)
+    else:
+        w.ui.status_e2_closed.setHidden(True)
+        w.ui.status_e2_open.setHidden(True)
+        w.ui.status_e2_running.setText("up")
         w.ui.status_e2_running.setHidden(False)
     if Elevator_3.open:
         w.ui.status_e3_closed.setHidden(True)
@@ -432,10 +444,16 @@ def refreshMainWindow():
         w.ui.status_e3_closed.setHidden(False)
         w.ui.status_e3_open.setHidden(True)
         w.ui.status_e3_running.setHidden(True)
-    elif Elevator_3.statusFree == False:
+    elif Elevator_3.statusUp == False:
         w.ui.status_e3_closed.setHidden(True)
         w.ui.status_e3_open.setHidden(True)
+        w.ui.status_e3_running.setText("down")
         w.ui.status_e3_running.setHidden(False)
+    else:
+        w.ui.status_e3_closed.setHidden(True)
+        w.ui.status_e3_open.setHidden(True)
+        w.ui.status_e3_running.setText("up")
+        w.ui.status_e3_running.setHidden(False)   
     if Elevator_4.open:
         w.ui.status_e4_closed.setHidden(True)
         w.ui.status_e4_open.setHidden(False)
@@ -444,9 +462,15 @@ def refreshMainWindow():
         w.ui.status_e4_closed.setHidden(False)
         w.ui.status_e4_open.setHidden(True)
         w.ui.status_e4_running.setHidden(True)
-    elif Elevator_4.statusFree == False:
+    elif Elevator_4.statusUp == False:
         w.ui.status_e4_closed.setHidden(True)
         w.ui.status_e4_open.setHidden(True)
+        w.ui.status_e4_running.setText("down")
+        w.ui.status_e4_running.setHidden(False)
+    else:
+        w.ui.status_e4_closed.setHidden(True)
+        w.ui.status_e4_open.setHidden(True)
+        w.ui.status_e4_running.setText("up")
         w.ui.status_e4_running.setHidden(False)
     if Elevator_5.open:
         w.ui.status_e5_closed.setHidden(True)
@@ -456,11 +480,16 @@ def refreshMainWindow():
         w.ui.status_e5_closed.setHidden(False)
         w.ui.status_e5_open.setHidden(True)
         w.ui.status_e5_running.setHidden(True)
-    elif Elevator_5.statusFree == False:
+    elif Elevator_5.statusUp == False:
         w.ui.status_e5_closed.setHidden(True)
         w.ui.status_e5_open.setHidden(True)
+        w.ui.status_e5_running.setText("down")
         w.ui.status_e5_running.setHidden(False)
-
+    else:
+        w.ui.status_e5_closed.setHidden(True)
+        w.ui.status_e5_open.setHidden(True)
+        w.ui.status_e5_running.setText("up")
+        w.ui.status_e5_running.setHidden(False)
 
 def move1():
     ##
