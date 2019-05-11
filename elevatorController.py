@@ -326,9 +326,9 @@ class MoveThread1(QThread):
         super(MoveThread1, self).__init__()
 
     def run(self):
+        move1()
         Elevator_1.move()
         Elevator_1.updateFloor()
-        move1()
         self.trigger.emit()
 
 
@@ -340,9 +340,9 @@ class MoveThread2(QThread):
         super(MoveThread2, self).__init__()
 
     def run(self):
+        move2()
         Elevator_2.move()
         Elevator_2.updateFloor()
-        move2()
         self.trigger.emit()
 
 
@@ -354,9 +354,9 @@ class MoveThread3(QThread):
         super(MoveThread3, self).__init__()
 
     def run(self):
+        move3()
         Elevator_3.move()
         Elevator_3.updateFloor()
-        move3()
         self.trigger.emit()
 
 
@@ -368,9 +368,9 @@ class MoveThread4(QThread):
         super(MoveThread4, self).__init__()
 
     def run(self):
+        move4()
         Elevator_4.move()
         Elevator_4.updateFloor()
-        move4()
         self.trigger.emit()
 
 
@@ -382,9 +382,9 @@ class MoveThread5(QThread):
         super(MoveThread5, self).__init__()
 
     def run(self):
+        move5()
         Elevator_5.move()
         Elevator_5.updateFloor()
-        move5()
         self.trigger.emit()
 
 
