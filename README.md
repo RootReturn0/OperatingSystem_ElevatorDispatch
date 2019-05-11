@@ -13,10 +13,6 @@ Mac OS Mojave
 ### PyQt5
 
 `pip3 install pyqt5`
-
-### PyInstaller
-
-`pip3 install pyinstaller`
  
 ## 测试环境
 * macOS Mojave
@@ -42,7 +38,11 @@ Mac OS Mojave
 ### 2、 前往目标楼层  
 点击所在电梯中的对应数字按钮
 
-### 3、 界面卡顿
+### 3、 取消楼层任务
+
+再次点击按钮（外部按钮触发的任务不可取消）
+
+### 4、 界面卡顿
 
 ***最新版本测试中未发生该情况***
 
@@ -63,10 +63,6 @@ Mac OS Mojave
 ### PyQt5
 
 `pip3 install pyqt5`
-
-### PyInstaller
-
-`pip3 install pyinstaller`
  
 ## Test Environment
 * macOS Mojave
@@ -80,7 +76,7 @@ Mac OS Mojave
 * The time required for the elevator to run through a floor is 0.4s.
 	
 ## Usage
-### 1、 Call elevator
+### 1. Call elevator
 * **Up**
 
 	Click the ⬆️ button on the left side
@@ -88,12 +84,13 @@ Mac OS Mojave
 
 	Click the ⬆️ button on the right side
 	
-### 2、 Go to the target floor 
+### 2. Go to the target floor 
 Click the corresponding number button in the elevator
 
-### 3、 Interface Pause
+### 3. Cancel tasks
+Click the button agian to cancel. (the tasks triggered by the buttons outside the elevators can not be cancelled)
+### 4. Interface Pause
 
 ***This did not happen in the tests of the lateset version***
 
 If this happens, click the `Refresh` button in the lower left corner to perform a refresh.
-
